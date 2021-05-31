@@ -40,12 +40,7 @@ const OverviewPage = () => {
         </div>
       </main>
 
-      <Tour
-        steps={tourSteps}
-        show={showTour}
-        setShow={setShowTour}
-        launchCookiePrefix="overview"
-      />
+      <Tour steps={tourSteps} show={showTour} setShow={setShowTour} />
     </div>
   );
 };
