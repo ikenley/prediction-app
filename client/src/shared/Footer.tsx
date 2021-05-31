@@ -6,7 +6,7 @@ const Footer = () => {
     <footer className="footer bg-dark">
       <div className="container-xl container-xxl bg-dark pl-md-0">
         <span className="text-white">
-          © {new Date().getFullYear()} TODO. All Rights Reserved
+          © {new Date().getFullYear()} Ian Kenley. All Rights Reserved
         </span>
       </div>
     </footer>
