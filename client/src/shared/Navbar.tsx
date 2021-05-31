@@ -7,11 +7,11 @@ type Props = {
 };
 
 const NavbarMain = ({ launchTour }: Props) => {
-  const handleTourClick = useCallback(() => {
-    if (launchTour) {
-      launchTour();
-    }
-  }, [launchTour]);
+  // const handleTourClick = useCallback(() => {
+  //   if (launchTour) {
+  //     launchTour();
+  //   }
+  // }, [launchTour]);
 
   return (
     <Navbar bg="dark" variant="dark" expand="lg">
