@@ -1,0 +1,102 @@
+/* Bootstrap overrides */
+// $primary: #0072ce;
+
+/* Top-level styles */
+html {
+  position: relative;
+  min-height: 100%;
+}
+.app body {
+  margin-bottom: 60px; /* Margin bottom by footer height */
+}
+
+/* utility */
+@media (min-width: 576px) {
+  .h-100-vh {
+    height: 100vh;
+  }
+}
+
+.min-height-100-vh {
+  min-height: 100vh;
+}
+
+.table-responsive-max-height-500 .table-responsive {
+  max-height: 500px;
+}
+
+.table-responsive-max-height-500 .table-responsive table {
+  margin-bottom: 0;
+}
+
+/* layout */
+.container,
+.container-fluid,
+.container-xl {
+  background-color: #fff;
+}
+
+/* reboot */
+.abbr {
+  cursor: help;
+  border-bottom: 1px dotted #000;
+}
+
+/* background */
+.bg-img {
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center center;
+}
+
+.bg-standard {
+  background-color: #00355f !important;
+}
+
+.backdrop-filter {
+  backdrop-filter: saturate(180%) blur(5px);
+}
+
+/* Navbar */
+.navbar {
+  font-family: "Museo Sans Light", sans-serif;
+  -webkit-font-smoothing: antialiased;
+  line-height: 24px;
+}
+
+/* table */
+.app .table-sm th,
+.app .table-sm td {
+  padding: 0.1rem 0.3rem;
+}
+
+.sticky-table th {
+  position: sticky;
+  top: -1px;
+  background-color: #fff;
+}
+
+/* modal */
+@media (min-width: 992px) {
+  .app .modal-lg,
+  .app .modal-xl {
+    max-width: 950px;
+  }
+}
+
+// $body-bg: #00355f;
+
+$tooltip-max-width: 300px;
+
+@media (min-width: 1440px) {
+  .app .container-xxl {
+    max-width: 1400px;
+  }
+}
+
+$enable-rounded: false;
+
+/* import bootstrap to set changes */
+@import "~bootstrap/scss/bootstrap";
+
+@import "/src/shared/grid/tables.scss";

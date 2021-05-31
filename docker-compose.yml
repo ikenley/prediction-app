@@ -1,0 +1,25 @@
+version: "3.9"
+services:
+  api:
+    build:
+      context: ./TemplateApi
+    container_name: template-app
+    # expose:
+    #   - "5000"
+    ports:
+      - "5000:5000"
+    restart: always
+  client:
+    build:
+      context: ./client
+    container_name: template-api
+    ports:
+      - "8080:80"
+    restart: always
+    links:
+      - "api"
+
+
+
+
+     

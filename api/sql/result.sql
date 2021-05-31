@@ -1,0 +1,1 @@
+-- Sample result queries which the app consumes
