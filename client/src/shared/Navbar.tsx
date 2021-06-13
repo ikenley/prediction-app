@@ -1,12 +1,17 @@
-import React, { useCallback } from "react";
-import { Nav, Navbar, NavDropdown } from "react-bootstrap";
-import { NavLink } from "react-router-dom";
+import React, { useContext } from "react";
+import classNames from "classnames";
+import { Nav, Navbar, NavItem } from "react-bootstrap";
+import { AuthContext } from "../auth/AuthContext";
+import LoginButton from "../auth/LoginButton";
+import LogoutButton from "../auth/LogoutButton";
 
 type Props = {
   launchTour?: () => void;
 };
 
 const NavbarMain = ({ launchTour }: Props) => {
+  const authContext = useContext(AuthContext);
+  const { isLoggedIn } = authContext;
   // const handleTourClick = useCallback(() => {
   //   if (launchTour) {
   //     launchTour();
@@ -35,8 +40,14 @@ const NavbarMain = ({ launchTour }: Props) => {
             Overview
           </NavLink> */}
         </Nav>
-        {/* <Nav className="ml-auto">
-          <NavDropdown
+        <Nav className="ml-auto">
+          <NavItem className={classNames({ "d-none": isLoggedIn })}>
+            <LoginButton />
+          </NavItem>
+          <NavItem className={classNames({ "d-none": !isLoggedIn })}>
+            <LogoutButton />
+          </NavItem>
+          {/* <NavDropdown
             title={<span>Resources</span>}
             id="navbar-context-menu"
             className="navbar-context-menu"
@@ -57,8 +68,8 @@ const NavbarMain = ({ launchTour }: Props) => {
             <NavDropdown.Item target="_blank" href="https://www.google.com">
               Foo
             </NavDropdown.Item>
-          </NavDropdown>
-        </Nav> */}
+          </NavDropdown>*/}
+        </Nav>
       </Navbar.Collapse>
     </Navbar>
   );

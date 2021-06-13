@@ -39,7 +39,6 @@ const OverviewPage = () => {
           <p>Coming Soon</p>
         </div>
       </main>
-
       <Tour steps={tourSteps} show={showTour} setShow={setShowTour} />
     </div>
   );

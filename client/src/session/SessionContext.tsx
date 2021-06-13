@@ -36,7 +36,7 @@ export const SessionContextProvider = ({ children }: any) => {
 
   // Get session when AuthContext changes
   useEffect(() => {
-    if (authContext.isLoading) {
+    if (!authContext.hasLoaded) {
       return;
     }
 

@@ -5,7 +5,6 @@ import { AuthContextProvider } from "./auth/AuthContext";
 import { SessionContextProvider } from "./session/SessionContext";
 import ScrollToTop from "./shared/ScrollToTop";
 import OverviewPage from "./overview/OverviewPage";
-
 function App() {
   return (
     <AuthContextProvider>
