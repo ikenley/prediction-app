@@ -15,6 +15,8 @@ using Serilog;
 using PredictionApi.Middleware;
 using PredictionApi.Models;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Amazon.DynamoDBv2;
+using Amazon.DynamoDBv2.DataModel;
 
 namespace PredictionApi
 {
@@ -41,18 +43,16 @@ namespace PredictionApi
 
             services.AddHttpContextAccessor();
 
-            //services.AddScoped<ISessionService, SessionService>();
+            services.AddDefaultAWSOptions(Configuration.GetAWSOptions());
+            services.AddAWSService<IAmazonDynamoDB>();
+            services.AddScoped<IDynamoDBContext, DynamoDBContext>();
+
+            services.AddScoped<IUserService, UserService>();
 
             // Add authentication
-            string jwtAuthority = Configuration["auth:jwt-authority"];
-            string audience = Configuration["auth:aud"];
+            //string jwtAuthority = Configuration["auth:jwt-authority"];
+            //string audience = Configuration["auth:aud"];
             string clientId = Configuration["auth:client-id"];
-            // services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-            //     .AddJwtBearer(options =>
-            //     {
-            //         options.Authority = jwtAuthority;
-            //         options.Audience = audience;
-            //     });
             services.AddAuthentication(options =>
             {
                 options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;

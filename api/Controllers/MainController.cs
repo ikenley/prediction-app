@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Microsoft.AspNetCore.Authorization;
+using PredictionApi.Models;
 
 namespace PredictionApi.Controllers
 {
@@ -16,10 +17,12 @@ namespace PredictionApi.Controllers
     public class MainController : ControllerBase
     {
         private readonly ILogger<MainController> _logger;
+        private readonly IUserService _userService;
 
-        public MainController(ILogger<MainController> logger)
+        public MainController(ILogger<MainController> logger, IUserService userService)
         {
             _logger = logger;
+            _userService = userService;
         }
 
         // GET /api/status
@@ -32,8 +35,9 @@ namespace PredictionApi.Controllers
         // GET /api/main/authorization
         [HttpGet("main/authorization")]
         [Authorize]//(Roles = Role.TodoNameRole)
-        public ActionResult GetAuthorization()
+        public async Task<ActionResult> GetAuthorization()
         {
+            await _userService.CreateOrUpdateAsync(HttpContext.User);
             return Ok();
         }
 
