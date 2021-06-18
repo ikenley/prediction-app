@@ -14,6 +14,7 @@ using Microsoft.Extensions.Logging;
 using Serilog;
 using PredictionApi.Middleware;
 using PredictionApi.Models;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 
 namespace PredictionApi
 {
@@ -42,6 +43,30 @@ namespace PredictionApi
 
             //services.AddScoped<ISessionService, SessionService>();
 
+            // Add authentication
+            string jwtAuthority = Configuration["auth:jwt-authority"];
+            string audience = Configuration["auth:aud"];
+            string clientId = Configuration["auth:client-id"];
+            // services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+            //     .AddJwtBearer(options =>
+            //     {
+            //         options.Authority = jwtAuthority;
+            //         options.Audience = audience;
+            //     });
+            services.AddAuthentication(options =>
+            {
+                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+
+            })
+            .AddJwtBearer(options =>
+            {
+                options.Audience = clientId;
+                options.SecurityTokenValidators.Clear();
+                options.SecurityTokenValidators.Add(new GoogleTokenValidator());
+            });
+
             services.AddControllers();
             services.AddMemoryCache();
         }
@@ -62,6 +87,7 @@ namespace PredictionApi
 
             app.UseRouting();
 
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>

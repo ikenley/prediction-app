@@ -2,7 +2,7 @@ const { createProxyMiddleware } = require("http-proxy-middleware");
 
 // Proxy server can point to either localhost for debugging or the dev endpoint
 // This could be ENV var based eventually, but it's easy + safe to store in git
-const debugApi = false;
+const debugApi = true;
 const isProd = false;
 
 const devHost = "https://prediction-app.ikenley.com";
