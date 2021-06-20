@@ -1,0 +1,20 @@
+using System;
+using System.Collections.Generic;
+using System.Security.Claims;
+using System.Threading.Tasks;
+
+namespace PredictionApi.Models
+{
+    public interface IPredictionService
+    {
+        Task<Prediction> CreateAsync(string userId, Prediction prediction);
+
+        Task<Prediction> GetByIdAsync(string userId, Guid id);
+
+        Task<List<Prediction>> GetByUserIdAsync(string userId);
+
+        Task<Prediction> UpdateAsync(string userId, Prediction prediction);
+
+        Task<Prediction> DeleteAsync(string userId, Guid id);
+    }
+}

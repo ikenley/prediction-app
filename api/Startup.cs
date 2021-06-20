@@ -48,10 +48,9 @@ namespace PredictionApi
             services.AddScoped<IDynamoDBContext, DynamoDBContext>();
 
             services.AddScoped<IUserService, UserService>();
+            services.AddScoped<IPredictionService, PredictionService>();
 
             // Add authentication
-            //string jwtAuthority = Configuration["auth:jwt-authority"];
-            //string audience = Configuration["auth:aud"];
             string clientId = Configuration["auth:client-id"];
             services.AddAuthentication(options =>
             {

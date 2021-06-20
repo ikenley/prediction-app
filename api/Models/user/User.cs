@@ -6,6 +6,7 @@ namespace PredictionApi.Models
     [DynamoDBTable("Users")]
     public class User
     {
+        [DynamoDBHashKey]
         public string Id { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
