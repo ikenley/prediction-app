@@ -36,25 +36,6 @@ export const AuthContextProvider = ({ children }: any) => {
     setLoginResponse,
   ] = useState<GoogleLoginResponse | null>(null);
 
-  // TODO fetch from identity provider
-  // Temporarily use arbitrary cookie for userId
-  // useEffect(() => {
-  //   const USER_COOKIE_NAME = "tmp_user_id";
-  //   let userId = Cookies.get(USER_COOKIE_NAME);
-
-  //   if (!userId) {
-  //     userId = uuidv4();
-  //     Cookies.set(USER_COOKIE_NAME, userId);
-  //   }
-
-  //   // Append userId to all requests
-  //   // TODO make this an Authorization token
-  //   axios.defaults.headers.common["X-APP-USERID"] = userId;
-
-  //   const state = { hasLoaded: false, userId };
-  //   setState(state);
-  // }, [setState]);
-
   const handleLogin = useCallback(
     (response: GoogleLoginResponse) => {
       axios.defaults.headers.common[
@@ -80,11 +61,9 @@ export const AuthContextProvider = ({ children }: any) => {
     axios
       .get("/api/main/authorization")
       .then((res) => {
-        console.log("authorization", res);
         setIsAuthorized(true);
       })
       .catch((res) => {
-        console.log("auth error", res);
         setIsAuthorized(false);
       });
   }, [loginResponse, setIsAuthorized]);
@@ -98,7 +77,7 @@ export const AuthContextProvider = ({ children }: any) => {
       handleLogin,
       handleLogout,
     };
-  }, [hasLoaded, loginResponse, handleLogin, handleLogout]);
+  }, [hasLoaded, loginResponse, isAuthorized, handleLogin, handleLogout]);
 
   return (
     <AuthContext.Provider value={AuthState}>{children}</AuthContext.Provider>

@@ -1,29 +1,18 @@
-import React, { useState, useEffect, useContext, useCallback } from "react";
+import React, { useState, useCallback } from "react";
+//import {Button} from "react-bootstrap";
 //import axios from "axios";
 import Navbar from "../shared/Navbar";
-import { SessionContext } from "../session/SessionContext";
+//import { AuthContext } from "../auth/AuthContext";
 import Tour from "../shared/Tour";
 import tourSteps from "./tourSteps";
+import CreatePredictionEditor from "../prediction_editor/CreatePredictionEditor";
 
 const OverviewPage = () => {
   const [showTour, setShowTour] = useState<boolean>(false);
-  const { session } = useContext(SessionContext);
 
   const launchTour = useCallback(() => {
     setShowTour(true);
   }, [setShowTour]);
-
-  useEffect(() => {
-    if (session.isLoading) {
-      //setResult(null);
-      return;
-    }
-
-    //const sessionId = session.sessionId;
-    // axios.get(`/api/Overview/${sessionId}`).then((res) => {
-    //   setResult(res.data);
-    // });
-  }, [session]);
 
   return (
     <div className="overview-page">
@@ -38,6 +27,7 @@ const OverviewPage = () => {
           <hr className="my-4" />
           <p>Coming Soon</p>
         </div>
+        <CreatePredictionEditor />
       </main>
       <Tour steps={tourSteps} show={showTour} setShow={setShowTour} />
     </div>

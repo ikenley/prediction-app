@@ -24,35 +24,40 @@ namespace PredictionApi.Controllers
         }
 
         [HttpPost("create")]
-        public async Task<Prediction> CreateAsync(string userId, Prediction prediction)
+        public async Task<Prediction> CreateAsync(Prediction prediction)
         {
+            string userId = HttpContext.User.GetUserId();
             var p = await _predictionService.CreateAsync(userId, prediction);
             return p;
         }
 
-        [HttpGet("by-id/{userId}/{id}")]
-        public async Task<Prediction> GetByIdAsync(string userId, Guid id)
+        [HttpGet("by-id/{id}")]
+        public async Task<Prediction> GetByIdAsync(Guid id)
         {
+            string userId = HttpContext.User.GetUserId();
             var prediction = await _predictionService.GetByIdAsync(userId, id);
             return prediction;
         }
 
-        [HttpGet("by-user/{userId}")]
-        public async Task<List<Prediction>> GetByUserIdAsync(string userId)
+        [HttpGet("by-user")]
+        public async Task<List<Prediction>> GetByUserIdAsync()
         {
+            string userId = HttpContext.User.GetUserId();
             var prediction = await _predictionService.GetByUserIdAsync(userId);
             return prediction;
         }
 
         [HttpPost("update")]
-        public async Task<Prediction> UpdateAsync(string userId, Prediction prediction)
+        public async Task<Prediction> UpdateAsync(Prediction prediction)
         {
+            string userId = HttpContext.User.GetUserId();
             var p = await _predictionService.UpdateAsync(userId, prediction);
             return p;
         }
 
-        public async Task<ActionResult> DeleteAsync(string userId, Guid id)
+        public async Task<ActionResult> DeleteAsync(Guid id)
         {
+            string userId = HttpContext.User.GetUserId();
             var prediction = await _predictionService.DeleteAsync(userId, id);
             return Ok();
         }
