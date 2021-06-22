@@ -4,13 +4,19 @@ import { Column } from "react-table";
 import DataGrid from "../shared/grid/DataGrid";
 import GridCell from "../shared/grid/GridCell";
 import { Prediction } from "../types";
+import PredictionActionsCell from "./PredictionActionsCell";
 
 type Props = {
   isLoading: boolean;
   predictions: Prediction[];
+  deletePrediction: (prediction: Prediction) => Promise<any>;
 };
 
-const PredictionGrid = ({ isLoading, predictions }: Props) => {
+const PredictionGrid = ({
+  isLoading,
+  predictions,
+  deletePrediction,
+}: Props) => {
   const columns: Column<any>[] = useMemo(
     () => [
       {
@@ -37,8 +43,19 @@ const PredictionGrid = ({ isLoading, predictions }: Props) => {
           );
         },
       },
+      {
+        Header: "Actions",
+        headerClassName: "text-center",
+        accessor: "id",
+        Cell: ({ row }: any) => (
+          <PredictionActionsCell
+            prediction={row.original}
+            deletePrediction={deletePrediction}
+          />
+        ),
+      },
     ],
-    []
+    [deletePrediction]
   );
 
   return (
@@ -46,7 +63,7 @@ const PredictionGrid = ({ isLoading, predictions }: Props) => {
       {isLoading ? (
         <Skeleton height={420} />
       ) : (
-        <DataGrid columns={columns} data={predictions} />
+        <DataGrid columns={columns} data={predictions} rowHeight={40} />
       )}
     </div>
   );

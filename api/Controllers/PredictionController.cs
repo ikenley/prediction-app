@@ -55,10 +55,11 @@ namespace PredictionApi.Controllers
             return p;
         }
 
+        [HttpDelete("{id}")]
         public async Task<ActionResult> DeleteAsync(Guid id)
         {
             string userId = HttpContext.User.GetUserId();
-            var prediction = await _predictionService.DeleteAsync(userId, id);
+            await _predictionService.DeleteAsync(userId, id);
             return Ok();
         }
     }

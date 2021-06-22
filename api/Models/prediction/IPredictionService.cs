@@ -15,6 +15,6 @@ namespace PredictionApi.Models
 
         Task<Prediction> UpdateAsync(string userId, Prediction prediction);
 
-        Task<Prediction> DeleteAsync(string userId, Guid id);
+        Task DeleteAsync(string userId, Guid id);
     }
 }

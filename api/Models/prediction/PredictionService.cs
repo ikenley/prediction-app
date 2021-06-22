@@ -38,9 +38,10 @@ namespace PredictionApi.Models
             return p;
         }
 
-        public Task<Prediction> DeleteAsync(string userId, Guid id)
+        public async Task DeleteAsync(string userId, Guid id)
         {
-            throw new NotImplementedException();
+            var context = new DynamoDBContext(_dynamoDBClient);
+            await context.DeleteAsync<Prediction>(userId, id);
         }
 
         public async Task<Prediction> GetByIdAsync(string userId, Guid id)

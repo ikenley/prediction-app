@@ -4,7 +4,7 @@ import Footer from "./shared/Footer";
 import { AuthContextProvider } from "./auth/AuthContext";
 import { SessionContextProvider } from "./session/SessionContext";
 import ScrollToTop from "./shared/ScrollToTop";
-import OverviewPage from "./overview/OverviewPage";
+import PredictionPage from "./prediction/PredictionPage";
 function App() {
   return (
     <AuthContextProvider>
@@ -17,7 +17,7 @@ function App() {
                 <FooPage />
               </Route> */}
               <Route path="/">
-                <OverviewPage />
+                <PredictionPage />
               </Route>
             </Switch>
 

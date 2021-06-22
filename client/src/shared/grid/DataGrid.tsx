@@ -15,6 +15,7 @@ type DataGridProps = {
   columns: any[];
   data: any[];
   options?: any; //TableOptions<any>
+  rowHeight?: number; // Default DEFAULT_ROW_HEIGHT 35
   maxHeight?: number;
   handleRowClick?: (row: any) => void;
 };
@@ -23,17 +24,20 @@ type TableProps = DataGridProps & {
   parentWidth: number;
 };
 
-const ITEM_SIZE = 35;
+const DEFAULT_ROW_HEIGHT = 35;
 
 function Table({
   columns,
   data,
   options,
   handleRowClick,
+  rowHeight,
   maxHeight = Number.MAX_VALUE,
   parentWidth,
 }: TableProps) {
   // Use the state and functions returned from useTable to build your UI
+
+  const itemSize = rowHeight || DEFAULT_ROW_HEIGHT;
 
   const defaultColumn = useMemo(
     () => ({
@@ -125,16 +129,16 @@ function Table({
 
   const headerWidth = useMemo(() => {
     // If items exceed height of window, subtract scrollbar width
-    if (rows.length * ITEM_SIZE > maxHeight) {
+    if (rows.length * itemSize > maxHeight) {
       const scrollBarSize = scrollbarWidth();
       return width - scrollBarSize;
     }
     return width;
-  }, [width, maxHeight, rows.length]);
+  }, [width, itemSize, maxHeight, rows.length]);
 
   const height = useMemo(() => {
-    return Math.min(maxHeight, rows.length * ITEM_SIZE);
-  }, [maxHeight, rows]);
+    return Math.min(maxHeight, rows.length * itemSize);
+  }, [maxHeight, itemSize, rows]);
 
   // Render the UI for your table
   return (
@@ -180,7 +184,7 @@ function Table({
       <div {...getTableBodyProps()} className="tbody fixed-size-list-outer">
         <FixedSizeList
           itemCount={rows.length}
-          itemSize={35}
+          itemSize={itemSize}
           width={width}
           height={height}
         >
@@ -195,6 +199,7 @@ const DataGrid = ({
   columns,
   data,
   options,
+  rowHeight,
   maxHeight,
   handleRowClick,
 }: DataGridProps) => {
@@ -212,6 +217,7 @@ const DataGrid = ({
               data={data}
               options={options}
               handleRowClick={handleRowClick}
+              rowHeight={rowHeight}
               maxHeight={maxHeight}
               parentWidth={width - 1}
             />
