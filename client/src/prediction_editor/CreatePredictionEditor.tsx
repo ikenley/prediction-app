@@ -1,13 +1,16 @@
 import React, { useState, useContext, useCallback } from "react";
 import { Button, Modal, Form, Row, Col } from "react-bootstrap";
 import numeral from "numeral";
-import axios from "axios";
 import { AuthContext } from "../auth/AuthContext";
 import { Prediction, defaultPrediction } from "../types";
 
-const CreatePredictionEditor = () => {
+type Props = {
+  createPrediction: (prediction: Prediction) => Promise<any>;
+};
+
+const CreatePredictionEditor = ({ createPrediction }: Props) => {
   const { isAuthorized } = useContext(AuthContext);
-  const [showModal, setShowModal] = useState<boolean>(true);
+  const [showModal, setShowModal] = useState<boolean>(false);
   const [prediction, setPrediction] = useState<Prediction>(defaultPrediction);
 
   const openModal = useCallback(() => {
@@ -33,11 +36,10 @@ const CreatePredictionEditor = () => {
     [setPrediction]
   );
 
-  const handleCreate = useCallback(() => {
-    axios.post("/api/prediction/create", prediction).then((res) => {
-      closeModal();
-    });
-  }, [prediction, closeModal]);
+  const handleCreate = useCallback(async () => {
+    await createPrediction(prediction);
+    closeModal();
+  }, [prediction, closeModal, createPrediction]);
 
   if (!isAuthorized) {
     return null;
