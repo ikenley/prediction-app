@@ -8,7 +8,7 @@ type Props = {
   createPrediction: (prediction: Prediction) => Promise<any>;
 };
 
-const CreatePredictionEditor = ({ createPrediction }: Props) => {
+const CreatePredictionModal = ({ createPrediction }: Props) => {
   const { isAuthorized } = useContext(AuthContext);
   const [showModal, setShowModal] = useState<boolean>(false);
   const [prediction, setPrediction] = useState<Prediction>(defaultPrediction);
@@ -135,4 +135,4 @@ const CreatePredictionEditor = ({ createPrediction }: Props) => {
   );
 };
 
-export default CreatePredictionEditor;
+export default CreatePredictionModal;

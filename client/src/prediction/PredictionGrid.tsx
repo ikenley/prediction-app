@@ -1,21 +1,21 @@
 import React, { useMemo } from "react";
 import Skeleton from "react-loading-skeleton";
+import { Button } from "react-bootstrap";
 import { Column } from "react-table";
 import DataGrid from "../shared/grid/DataGrid";
 import GridCell from "../shared/grid/GridCell";
 import { Prediction } from "../types";
-import PredictionActionsCell from "./PredictionActionsCell";
 
 type Props = {
   isLoading: boolean;
   predictions: Prediction[];
-  deletePrediction: (prediction: Prediction) => Promise<any>;
+  selectPrediction: (prediction: Prediction) => void;
 };
 
 const PredictionGrid = ({
   isLoading,
   predictions,
-  deletePrediction,
+  selectPrediction,
 }: Props) => {
   const columns: Column<any>[] = useMemo(
     () => [
@@ -23,6 +23,17 @@ const PredictionGrid = ({
         Header: "Name",
         accessor: "name",
         width: 150,
+        Cell: ({ row, value }: any) => (
+          <div>
+            <Button
+              variant="link"
+              size="sm"
+              onClick={selectPrediction.bind(null, row.original)}
+            >
+              {value}
+            </Button>
+          </div>
+        ),
       },
       {
         Header: "Probability",
@@ -43,19 +54,8 @@ const PredictionGrid = ({
           );
         },
       },
-      {
-        Header: "Actions",
-        headerClassName: "text-center",
-        accessor: "id",
-        Cell: ({ row }: any) => (
-          <PredictionActionsCell
-            prediction={row.original}
-            deletePrediction={deletePrediction}
-          />
-        ),
-      },
     ],
-    [deletePrediction]
+    [selectPrediction]
   );
 
   return (

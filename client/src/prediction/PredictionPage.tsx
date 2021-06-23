@@ -6,13 +6,15 @@ import Navbar from "../shared/Navbar";
 import { AuthContext } from "../auth/AuthContext";
 import Tour from "../shared/Tour";
 import tourSteps from "./tourSteps";
-import CreatePredictionEditor from "../prediction_editor/CreatePredictionEditor";
+import CreatePredictionModal from "../prediction_editor/CreatePredictionModal";
+import PredictionEditor from "./PredictionEditor";
 import PredictionGrid from "./PredictionGrid";
 
 const PredictionPage = () => {
   const { isAuthorized } = useContext(AuthContext);
   const [showTour, setShowTour] = useState<boolean>(false);
   const [predictions, setPredictions] = useState<Prediction[] | null>(null);
+  const [selPrediction, setSelPrediction] = useState<Prediction | null>(null);
 
   const launchTour = useCallback(() => {
     setShowTour(true);
@@ -23,6 +25,25 @@ const PredictionPage = () => {
       const res = await axios.post("/api/prediction/create", prediction);
 
       const nextPredictions = [...(predictions || []), res.data];
+      setPredictions(nextPredictions);
+    },
+    [predictions, setPredictions]
+  );
+
+  const selectPrediction = useCallback(
+    (prediction: Prediction | null) => {
+      setSelPrediction(prediction);
+    },
+    [setSelPrediction]
+  );
+
+  const updatePrediction = useCallback(
+    async (prediction: Prediction) => {
+      const res = await axios.post("/api/prediction/update", prediction);
+
+      const nextPredictions = [...(predictions || [])];
+      const ix = nextPredictions.findIndex((p) => p.id === prediction.id);
+      nextPredictions[ix] = res.data;
       setPredictions(nextPredictions);
     },
     [predictions, setPredictions]
@@ -65,11 +86,17 @@ const PredictionPage = () => {
           <p className="lead">Make predictions, revisit them, self-assess.</p>
         </div>
         <div className="mb-3">
-          <CreatePredictionEditor createPrediction={createPrediction} />
+          <CreatePredictionModal createPrediction={createPrediction} />
         </div>
         <PredictionGrid
           isLoading={predictions === null}
           predictions={predictions || []}
+          selectPrediction={selectPrediction}
+        />
+        <PredictionEditor
+          selPrediction={selPrediction}
+          selectPrediction={selectPrediction}
+          updatePrediction={updatePrediction}
           deletePrediction={deletePrediction}
         />
       </main>
