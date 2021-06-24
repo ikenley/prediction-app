@@ -49,8 +49,8 @@ const PredictionGrid = ({
           const date = new Date(value);
           return (
             <span>{`${
-              date.getMonth() + 1
-            }/${date.getDate()}/${date.getFullYear()}`}</span>
+              date.getUTCMonth() + 1
+            }/${date.getUTCDate()}/${date.getUTCFullYear()}`}</span>
           );
         },
       },

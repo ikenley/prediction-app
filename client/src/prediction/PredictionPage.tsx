@@ -13,6 +13,7 @@ import PredictionGrid from "./PredictionGrid";
 const PredictionPage = () => {
   const { isAuthorized } = useContext(AuthContext);
   let { defaultPredictionId }: any = useParams();
+  const [defaultHasLoaded, setDefaultHasLoaded] = useState<boolean>(false);
   const [showTour, setShowTour] = useState<boolean>(false);
   const [predictions, setPredictions] = useState<Prediction[] | null>(null);
   const [selPrediction, setSelPrediction] = useState<Prediction | null>(null);
@@ -79,7 +80,12 @@ const PredictionPage = () => {
 
   // Pre-select default Prediction if passed via URL
   useEffect(() => {
-    if (!defaultPredictionId || !predictions || predictions.length === 0) {
+    if (
+      defaultHasLoaded ||
+      !defaultPredictionId ||
+      !predictions ||
+      predictions.length === 0
+    ) {
       return;
     }
 
@@ -89,8 +95,15 @@ const PredictionPage = () => {
 
     if (defaultPrediction) {
       selectPrediction(defaultPrediction);
+      setDefaultHasLoaded(true);
     }
-  }, [defaultPredictionId, predictions, selectPrediction]);
+  }, [
+    defaultPredictionId,
+    predictions,
+    selectPrediction,
+    defaultHasLoaded,
+    setDefaultHasLoaded,
+  ]);
 
   return (
     <div className="overview-page">
