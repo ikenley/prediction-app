@@ -117,7 +117,7 @@ const PredictionPage = () => {
           <p className="lead">
             Become a superb forecaster: (1) Make predictions (2) Assign a
             probability (3) Revisit <br />
-            <Link to="/about">Read more</Link>
+            <Link to="/about">Learn more</Link>
           </p>
         </div>
         <div className="mb-3">
