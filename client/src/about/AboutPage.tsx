@@ -14,8 +14,8 @@ const AboutPage = () => {
         <p>
           This is a small but useful(?) tool for creating predictions and
           setting a reminder email to check back in on them. The hope is that by
-          assigning probabilities and revisiting predictions, one's assertions
-          become more thoughtful and rigorous.
+          assigning probabilities to predictions and revisiting them later,
+          one's assertions become more thoughtful and rigorous.
         </p>
         <div className="h4" id="about-what-is-this">
           Is this commercial?
@@ -23,13 +23,13 @@ const AboutPage = () => {
         <p>
           No. Out of a combination of{" "}
           <a href="https://adtax.paulromer.net/">principle</a> and laziness,
-          this app will never have ads.
+          this app will never have ads or track you.
         </p>
         <div className="h4" id="about-what-is-this">
           Can it support feature XYZ?
         </div>
         <p>
-          Probably! If you have a feature request, shoot use an email at{" "}
+          Probably! If you have a feature request, shoot us an email at{" "}
           <a href="mailto:predictions.ikenley@gmail.com">
             predictions.ikenley@gmail.com
           </a>
