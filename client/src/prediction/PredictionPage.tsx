@@ -1,17 +1,18 @@
 import React, { useState, useCallback, useEffect, useContext } from "react";
 //import {Button} from "react-bootstrap";
 import axios from "axios";
+import { useParams } from "react-router-dom";
 import { Prediction } from "../types";
 import Navbar from "../shared/Navbar";
 import { AuthContext } from "../auth/AuthContext";
 import Tour from "../shared/Tour";
 import tourSteps from "./tourSteps";
-import CreatePredictionModal from "../prediction_editor/CreatePredictionModal";
+import CreatePredictionModal from "./CreatePredictionModal";
 import PredictionEditor from "./PredictionEditor";
 import PredictionGrid from "./PredictionGrid";
-
 const PredictionPage = () => {
   const { isAuthorized } = useContext(AuthContext);
+  let { defaultPredictionId }: any = useParams();
   const [showTour, setShowTour] = useState<boolean>(false);
   const [predictions, setPredictions] = useState<Prediction[] | null>(null);
   const [selPrediction, setSelPrediction] = useState<Prediction | null>(null);
@@ -75,6 +76,21 @@ const PredictionPage = () => {
       setPredictions(res.data);
     });
   }, [isAuthorized, setPredictions]);
+
+  // Pre-select default Prediction if passed via URL
+  useEffect(() => {
+    if (!defaultPredictionId || !predictions || predictions.length === 0) {
+      return;
+    }
+
+    const defaultPrediction = predictions.find(
+      (p) => p.id === defaultPredictionId
+    );
+
+    if (defaultPrediction) {
+      selectPrediction(defaultPrediction);
+    }
+  }, [defaultPredictionId, predictions, selectPrediction]);
 
   return (
     <div className="overview-page">

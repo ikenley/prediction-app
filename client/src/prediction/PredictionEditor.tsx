@@ -83,7 +83,7 @@ const PredictionEditor = ({
   return (
     <Modal show={true} onHide={closeModal} size="lg" backdrop="static">
       <Modal.Header closeButton>
-        <Modal.Title>Create Prediction</Modal.Title>
+        <Modal.Title>View Prediction</Modal.Title>
       </Modal.Header>
       <Modal.Body>
         <Form>
