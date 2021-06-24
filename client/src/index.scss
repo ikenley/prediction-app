@@ -21,6 +21,13 @@ html {
   min-height: 100vh;
 }
 
+.ellipsis {
+  overflow: hidden;
+  white-space: nowrap;
+  display: inline-block;
+  text-overflow: ellipsis;
+}
+
 .table-responsive-max-height-500 .table-responsive {
   max-height: 500px;
 }

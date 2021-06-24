@@ -2,8 +2,7 @@ import React, { useMemo } from "react";
 import Skeleton from "react-loading-skeleton";
 import { Button } from "react-bootstrap";
 import { Column } from "react-table";
-import DataGrid from "../shared/grid/DataGrid";
-import GridCell from "../shared/grid/GridCell";
+import DataGrid, { GridCell } from "../shared/grid/DataGrid";
 import { Prediction } from "../types";
 
 type Props = {
@@ -22,9 +21,9 @@ const PredictionGrid = ({
       {
         Header: "Name",
         accessor: "name",
-        width: 150,
+        width: 200,
         Cell: ({ row, value }: any) => (
-          <div>
+          <div className="ellipsis w-100" title={value}>
             <Button
               variant="link"
               size="sm"

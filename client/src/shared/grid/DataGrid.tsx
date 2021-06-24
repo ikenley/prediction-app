@@ -8,8 +8,9 @@ import DefaultColumnFilter from "./DefaultColumnFilter";
 import SelectColumnFilter from "./SelectColumnFilter";
 import classNames from "classnames";
 import GridCell from "./GridCell";
+import EllipsisCell from "./EllipsisCell";
 
-export { GridCell };
+export { GridCell, EllipsisCell };
 
 type DataGridProps = {
   columns: any[];
