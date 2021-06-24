@@ -1,6 +1,7 @@
 import React, { useContext } from "react";
 import classNames from "classnames";
 import { Nav, Navbar, NavItem } from "react-bootstrap";
+import { NavLink } from "react-router-dom";
 import { AuthContext } from "../auth/AuthContext";
 import LoginButton from "../auth/LoginButton";
 import LogoutButton from "../auth/LogoutButton";
@@ -12,11 +13,6 @@ type Props = {
 const NavbarMain = ({ launchTour }: Props) => {
   const authContext = useContext(AuthContext);
   const { isLoggedIn } = authContext;
-  // const handleTourClick = useCallback(() => {
-  //   if (launchTour) {
-  //     launchTour();
-  //   }
-  // }, [launchTour]);
 
   return (
     <Navbar bg="dark" variant="dark" expand="lg">
@@ -24,21 +20,17 @@ const NavbarMain = ({ launchTour }: Props) => {
       <Navbar.Toggle aria-controls="basic-navbar-nav" />
       <Navbar.Collapse id="basic-navbar-nav">
         <Nav className="mr-auto nav-links">
-          {/* <NavLink
-            className="nav-link nav-intro"
-            activeClassName="active"
-            to="/foo"
-          >
-            Foo
-          </NavLink>
           <NavLink
-            className="nav-link nav-overview"
+            className="nav-link"
             activeClassName="active"
             to="/"
             exact={true}
           >
-            Overview
-          </NavLink> */}
+            Predictions
+          </NavLink>
+          <NavLink className="nav-link" activeClassName="active" to="/about">
+            About
+          </NavLink>
         </Nav>
         <Nav className="ml-auto">
           <NavItem className={classNames({ "d-none": isLoggedIn })}>

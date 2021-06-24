@@ -3,14 +3,22 @@ import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import Footer from "./shared/Footer";
 import { AuthContextProvider } from "./auth/AuthContext";
 import ScrollToTop from "./shared/ScrollToTop";
+import AboutPage from "./about/AboutPage";
 import PredictionPage from "./prediction/PredictionPage";
-function App() {
+
+const App = () => {
   return (
     <AuthContextProvider>
       <Router>
         <div className="app">
           <ScrollToTop />
           <Switch>
+            <Route path="/about">
+              <AboutPage />
+            </Route>
+            <Route path="/predictions">
+              <PredictionPage />
+            </Route>
             <Route path="/p/:defaultPredictionId">
               <PredictionPage />
             </Route>
@@ -24,6 +32,6 @@ function App() {
       </Router>
     </AuthContextProvider>
   );
-}
+};
 
 export default App;

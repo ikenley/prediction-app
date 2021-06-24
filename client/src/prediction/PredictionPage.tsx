@@ -1,7 +1,7 @@
 import React, { useState, useCallback, useEffect, useContext } from "react";
 //import {Button} from "react-bootstrap";
 import axios from "axios";
-import { useParams } from "react-router-dom";
+import { useParams, Link } from "react-router-dom";
 import { Prediction } from "../types";
 import Navbar from "../shared/Navbar";
 import { AuthContext } from "../auth/AuthContext";
@@ -112,9 +112,13 @@ const PredictionPage = () => {
         role="main"
         className="container-xl container-xxl min-height-100-vh pt-3 pb-5"
       >
-        <div className="jumbotron py-4">
-          <h1 className="display-4">Predictions</h1>
-          <p className="lead">Make predictions, revisit them, self-assess.</p>
+        <div className="jumbotron py-2 py-md-3">
+          <h1 className="display-5">Predictions</h1>
+          <p className="lead">
+            Become a superb forecaster: (1) Make predictions (2) Assign a
+            probability (3) Revisit <br />
+            <Link to="/about">Read more</Link>
+          </p>
         </div>
         <div className="mb-3">
           <CreatePredictionModal createPrediction={createPrediction} />
