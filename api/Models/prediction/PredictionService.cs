@@ -26,7 +26,7 @@ namespace PredictionApi.Models
             p.UserId = userId;
             p.Name = prediction.Name;
             p.Probability = prediction.Probability;
-            p.RevisitOn = prediction.RevisitOn;
+            p.RevisitOn = prediction.RevisitOn.Date;
             p.IsTrue = null;
             p.Description = prediction.Description;
             p.CreatedOn = DateTime.Now;
@@ -65,7 +65,7 @@ namespace PredictionApi.Models
 
             old.Name = prediction.Name;
             old.Probability = prediction.Probability;
-            old.RevisitOn = prediction.RevisitOn;
+            old.RevisitOn = prediction.RevisitOn.Date;
             old.IsTrue = prediction.IsTrue;
             old.Description = prediction.Description;
             old.LastUpdated = DateTime.Now;

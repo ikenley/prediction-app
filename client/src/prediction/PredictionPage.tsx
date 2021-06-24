@@ -51,6 +51,8 @@ const PredictionPage = () => {
 
   const deletePrediction = useCallback(
     async (prediction: Prediction) => {
+      setSelPrediction(null);
+
       await axios.delete(`/api/prediction/${prediction.id}`);
 
       if (predictions) {
