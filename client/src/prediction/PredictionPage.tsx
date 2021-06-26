@@ -1,7 +1,7 @@
 import React, { useState, useCallback, useEffect, useContext } from "react";
-//import {Button} from "react-bootstrap";
 import axios from "axios";
 import { useParams, Link } from "react-router-dom";
+import { Tabs, Tab } from "react-bootstrap";
 import { Prediction } from "../types";
 import Navbar from "../shared/Navbar";
 import { AuthContext } from "../auth/AuthContext";
@@ -10,6 +10,7 @@ import tourSteps from "./tourSteps";
 import CreatePredictionModal from "./CreatePredictionModal";
 import PredictionEditor from "./PredictionEditor";
 import PredictionGrid from "./PredictionGrid";
+
 const PredictionPage = () => {
   const { isAuthorized } = useContext(AuthContext);
   let { defaultPredictionId }: any = useParams();
@@ -123,11 +124,23 @@ const PredictionPage = () => {
         <div className="mb-3">
           <CreatePredictionModal createPrediction={createPrediction} />
         </div>
-        <PredictionGrid
-          isLoading={predictions === null}
-          predictions={predictions || []}
-          selectPrediction={selectPrediction}
-        />
+        <Tabs defaultActiveKey="profile" id="uncontrolled-tab-example">
+          <Tab eventKey="upcoming" title="Upcoming">
+            <PredictionGrid
+              isLoading={predictions === null}
+              predictions={predictions || []}
+              selectPrediction={selectPrediction}
+            />
+          </Tab>
+          <Tab eventKey="resolved" title="Resolved">
+            <PredictionGrid
+              isLoading={predictions === null}
+              predictions={predictions || []}
+              selectPrediction={selectPrediction}
+            />
+          </Tab>
+        </Tabs>
+
         <PredictionEditor
           selPrediction={selPrediction}
           selectPrediction={selectPrediction}
