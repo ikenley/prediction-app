@@ -1,5 +1,6 @@
 /* Bootstrap overrides */
-// $primary: #0072ce;
+$blue: #007bff;
+$primary: $blue;
 
 /* Top-level styles */
 html {
@@ -82,6 +83,19 @@ html {
   top: -1px;
   background-color: #fff;
 }
+
+/* Tabs */
+// .app .nav-tabs .nav-item.show .nav-link,
+// .app .nav-tabs .nav-link.active {
+//   color: #fff;
+// }
+
+// .app .nav-tabs .nav-item.show .nav-link,
+// .app .nav-tabs .nav-link.active {
+//   color: #fff;
+//   background-color: $primary;
+//   border-color: #dee2e6 #dee2e6 $primary;
+// }
 
 /* modal */
 @media (min-width: 992px) {

@@ -1,4 +1,5 @@
 import React, { useMemo } from "react";
+import classNames from "classnames";
 import Skeleton from "react-loading-skeleton";
 import { Button } from "react-bootstrap";
 import { Column } from "react-table";
@@ -9,15 +10,23 @@ type Props = {
   isLoading: boolean;
   predictions: Prediction[];
   selectPrediction: (prediction: Prediction) => void;
+  showResolved: boolean;
 };
 
 const PredictionGrid = ({
   isLoading,
   predictions,
   selectPrediction,
+  showResolved,
 }: Props) => {
-  const columns: Column<any>[] = useMemo(
-    () => [
+  const visiblePredictions = useMemo(() => {
+    return predictions.filter((p) =>
+      showResolved ? p.isTrue !== null : p.isTrue === null
+    );
+  }, [showResolved, predictions]);
+
+  const columns: Column<any>[] = useMemo(() => {
+    const cols = [
       {
         Header: "Name",
         accessor: "name",
@@ -40,7 +49,28 @@ const PredictionGrid = ({
         accessor: "probability",
         Cell: ({ value }: any) => <GridCell value={value} format="0%" />,
       },
-      {
+    ];
+
+    if (showResolved) {
+      cols.push({
+        Header: "Was True",
+        headerClassName: "text-center",
+        accessor: "isTrue",
+        Cell: ({ value }: any) => {
+          return (
+            <div className="text-center" title={value ? "True" : "False"}>
+              <i
+                className={classNames("fas", {
+                  "fa-check": value,
+                  "fa-times": !value,
+                })}
+              />
+            </div>
+          );
+        },
+      });
+    } else {
+      cols.push({
         Header: "Revisit On",
         headerClassName: "text-center",
         accessor: "revisitOn",
@@ -52,17 +82,18 @@ const PredictionGrid = ({
             }/${date.getUTCDate()}/${date.getUTCFullYear()}`}</span>
           );
         },
-      },
-    ],
-    [selectPrediction]
-  );
+      });
+    }
+
+    return cols;
+  }, [showResolved, selectPrediction]);
 
   return (
     <div className="market-share-grid">
       {isLoading ? (
         <Skeleton height={420} />
       ) : (
-        <DataGrid columns={columns} data={predictions} rowHeight={40} />
+        <DataGrid columns={columns} data={visiblePredictions} rowHeight={40} />
       )}
     </div>
   );

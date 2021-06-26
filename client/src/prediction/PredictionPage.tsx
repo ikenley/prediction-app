@@ -124,12 +124,17 @@ const PredictionPage = () => {
         <div className="mb-3">
           <CreatePredictionModal createPrediction={createPrediction} />
         </div>
-        <Tabs defaultActiveKey="profile" id="uncontrolled-tab-example">
+        <Tabs
+          defaultActiveKey="upcoming"
+          transition={false}
+          id="prediction-page-tabs"
+        >
           <Tab eventKey="upcoming" title="Upcoming">
             <PredictionGrid
               isLoading={predictions === null}
               predictions={predictions || []}
               selectPrediction={selectPrediction}
+              showResolved={false}
             />
           </Tab>
           <Tab eventKey="resolved" title="Resolved">
@@ -137,6 +142,7 @@ const PredictionPage = () => {
               isLoading={predictions === null}
               predictions={predictions || []}
               selectPrediction={selectPrediction}
+              showResolved
             />
           </Tab>
         </Tabs>
