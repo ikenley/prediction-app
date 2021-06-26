@@ -34,15 +34,12 @@ export type Prediction = {
   lastUpdated: Date;
 };
 
-const nextWeek = new Date();
-nextWeek.setDate(new Date().getDate() + 7);
-
 export const defaultPrediction: Prediction = {
   id: "00000000-0000-0000-0000-000000000000",
   userId: "",
   name: "",
   probability: 0.5,
-  revisitOn: nextWeek,
+  revisitOn: new Date(),
   isTrue: null,
   description: "",
   createdOn: new Date(),
