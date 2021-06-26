@@ -15,7 +15,7 @@ const AboutPage = () => {
           This is a small but useful(?) tool for creating predictions and
           setting a reminder email to check back in on them. The hope is that by
           assigning probabilities to predictions and revisiting them later,
-          one's assertions become more thoughtful and rigorous.
+          you can hone your instinct and make your guesswork seem like magic.
         </p>
         <div className="h4" id="about-what-is-this">
           Is this commercial?
