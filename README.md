@@ -2,6 +2,8 @@
 
 A simple web app which allows you to make predictions, set reminders, and self-assess one's track record. Based on superforcasters (citation needed)
 
+See it live at [predictions.ikenley.com](https://predictions.ikenley.com/)
+
 Forked from [template-application](https://github.com/ikenley/template-application)
 Hosted on [template-infrastructure](https://github.com/ikenley/template-infrastructure)
 
