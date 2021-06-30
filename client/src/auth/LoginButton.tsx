@@ -15,6 +15,7 @@ const LoginButton = () => {
       buttonText="Login"
       onSuccess={authContext.handleLogin}
       onFailure={responseGoogle}
+      onAutoLoadFinished={authContext.onAutoLoadFinished}
       cookiePolicy={"single_host_origin"}
       isSignedIn={true}
     />

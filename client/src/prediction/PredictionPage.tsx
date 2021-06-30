@@ -1,18 +1,20 @@
 import React, { useState, useCallback, useEffect, useContext } from "react";
 import axios from "axios";
 import { useParams, Link } from "react-router-dom";
-import { Tabs, Tab } from "react-bootstrap";
+import { Tabs, Tab, Alert } from "react-bootstrap";
+import Skeleton from "react-loading-skeleton";
 import { Prediction } from "../types";
 import Navbar from "../shared/Navbar";
 import { AuthContext } from "../auth/AuthContext";
 import Tour from "../shared/Tour";
 import tourSteps from "./tourSteps";
+import LoginButton from "../auth/LoginButton";
 import CreatePredictionModal from "./CreatePredictionModal";
 import PredictionEditor from "./PredictionEditor";
 import PredictionGrid from "./PredictionGrid";
 
 const PredictionPage = () => {
-  const { isAuthorized } = useContext(AuthContext);
+  const { isAuthorized, hasLoaded } = useContext(AuthContext);
   let { defaultPredictionId }: any = useParams();
   const [defaultHasLoaded, setDefaultHasLoaded] = useState<boolean>(false);
   const [showTour, setShowTour] = useState<boolean>(false);
@@ -70,14 +72,19 @@ const PredictionPage = () => {
 
   // Get Predictions on page load
   useEffect(() => {
+    if (!hasLoaded) {
+      return;
+    }
+
     if (!isAuthorized) {
+      setPredictions([]);
       return;
     }
 
     axios.get("/api/prediction/by-user").then((res) => {
       setPredictions(res.data);
     });
-  }, [isAuthorized, setPredictions]);
+  }, [hasLoaded, isAuthorized, setPredictions]);
 
   // Pre-select default Prediction if passed via URL
   useEffect(() => {
@@ -109,10 +116,7 @@ const PredictionPage = () => {
   return (
     <div className="overview-page">
       <Navbar launchTour={launchTour} />
-      <main
-        role="main"
-        className="container-xl container-xxl min-height-100-vh pt-3 pb-5"
-      >
+      <main role="main" className="container-xl container-xxl pt-3 pb-5">
         <div className="jumbotron py-2 py-md-3">
           <h1 className="display-5">Predictions</h1>
           <p className="lead">
@@ -124,28 +128,42 @@ const PredictionPage = () => {
         <div className="mb-3">
           <CreatePredictionModal createPrediction={createPrediction} />
         </div>
-        <Tabs
-          defaultActiveKey="upcoming"
-          transition={false}
-          id="prediction-page-tabs"
-        >
-          <Tab eventKey="upcoming" title="Upcoming">
-            <PredictionGrid
-              isLoading={predictions === null}
-              predictions={predictions || []}
-              selectPrediction={selectPrediction}
-              showResolved={false}
-            />
-          </Tab>
-          <Tab eventKey="resolved" title="Resolved">
-            <PredictionGrid
-              isLoading={predictions === null}
-              predictions={predictions || []}
-              selectPrediction={selectPrediction}
-              showResolved
-            />
-          </Tab>
-        </Tabs>
+        {hasLoaded ? (
+          isAuthorized ? (
+            <Tabs
+              defaultActiveKey="upcoming"
+              transition={false}
+              id="prediction-page-tabs"
+            >
+              <Tab eventKey="upcoming" title="Upcoming">
+                <PredictionGrid
+                  isLoading={predictions === null}
+                  predictions={predictions || []}
+                  selectPrediction={selectPrediction}
+                  showResolved={false}
+                />
+              </Tab>
+              <Tab eventKey="resolved" title="Resolved">
+                <PredictionGrid
+                  isLoading={predictions === null}
+                  predictions={predictions || []}
+                  selectPrediction={selectPrediction}
+                  showResolved
+                />
+              </Tab>
+            </Tabs>
+          ) : (
+            <div>
+              <Alert variant="secondary">
+                You are not logged in. Consider doing that.
+                <hr />
+                <LoginButton />
+              </Alert>
+            </div>
+          )
+        ) : (
+          <Skeleton height={420} />
+        )}
 
         <PredictionEditor
           selPrediction={selPrediction}

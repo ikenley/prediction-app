@@ -92,9 +92,9 @@ const PredictionGrid = ({
     <div className="market-share-grid">
       {isLoading ? (
         <Skeleton height={420} />
-      ) : (
+      ) : visiblePredictions && visiblePredictions.length ? (
         <DataGrid columns={columns} data={visiblePredictions} rowHeight={40} />
-      )}
+      ) : null}
     </div>
   );
 };
