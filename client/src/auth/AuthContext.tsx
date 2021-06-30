@@ -4,6 +4,7 @@ import React, {
   useMemo,
   useCallback,
   useEffect,
+  useRef,
 } from "react";
 import axios from "axios";
 import { GoogleLoginResponse } from "react-google-login";
@@ -31,12 +32,12 @@ const defaultAuthState: AuthState = {
 export const AuthContext = createContext(defaultAuthState);
 
 export const AuthContextProvider = ({ children }: any) => {
-  const [autoLoadSuccess, setAutoLoadSuccess] = useState<boolean | null>(null);
-  const [isAuthorized, setIsAuthorized] = useState<boolean>(false);
+  const [isAuthorized, setIsAuthorized] = useState<boolean | null>(null);
   const [
     loginResponse,
     setLoginResponse,
   ] = useState<GoogleLoginResponse | null>(null);
+  const hasLoadedOnce = useRef<boolean>(false);
 
   const handleLogin = useCallback(
     (response: GoogleLoginResponse) => {
@@ -55,15 +56,21 @@ export const AuthContextProvider = ({ children }: any) => {
 
   const onAutoLoadFinished = useCallback(
     (successLogin: boolean) => {
-      setAutoLoadSuccess(successLogin);
+      if (!successLogin) {
+        setIsAuthorized(false);
+      }
     },
-    [setAutoLoadSuccess]
+    [setIsAuthorized]
   );
 
   // Upon login check api authorization
   useEffect(() => {
     if (!loginResponse) {
-      setIsAuthorized(false);
+      if (hasLoadedOnce.current) {
+        setIsAuthorized(false);
+      } else {
+        hasLoadedOnce.current = true;
+      }
       return;
     }
 
@@ -79,16 +86,15 @@ export const AuthContextProvider = ({ children }: any) => {
 
   const AuthState = useMemo(() => {
     return {
-      hasLoaded: loginResponse !== null || autoLoadSuccess === false,
+      hasLoaded: isAuthorized !== null,
       isLoggedIn: loginResponse !== null,
       userId: loginResponse?.googleId || "",
-      isAuthorized,
+      isAuthorized: isAuthorized === true,
       handleLogin,
       handleLogout,
       onAutoLoadFinished,
     };
   }, [
-    autoLoadSuccess,
     loginResponse,
     isAuthorized,
     handleLogin,
