@@ -15,7 +15,7 @@ export type AuthState = {
   isAuthorized: boolean;
   handleLogin: (responseGoogle: any) => void;
   handleLogout: () => void;
-  onAutoLoadFinished: () => void;
+  onAutoLoadFinished: (successLogin: boolean) => void;
 };
 
 const defaultAuthState: AuthState = {
@@ -25,13 +25,13 @@ const defaultAuthState: AuthState = {
   isAuthorized: false,
   handleLogin: () => {},
   handleLogout: () => {},
-  onAutoLoadFinished: () => {},
+  onAutoLoadFinished: (successLogin: boolean) => {},
 };
 
 export const AuthContext = createContext(defaultAuthState);
 
 export const AuthContextProvider = ({ children }: any) => {
-  const [hasLoaded, setHasLoaded] = useState<boolean>(false);
+  const [autoLoadSuccess, setAutoLoadSuccess] = useState<boolean | null>(null);
   const [isAuthorized, setIsAuthorized] = useState<boolean>(false);
   const [
     loginResponse,
@@ -53,9 +53,12 @@ export const AuthContextProvider = ({ children }: any) => {
     setLoginResponse(null);
   }, [setLoginResponse]);
 
-  const onAutoLoadFinished = useCallback(() => {
-    setHasLoaded(true);
-  }, [setHasLoaded]);
+  const onAutoLoadFinished = useCallback(
+    (successLogin: boolean) => {
+      setAutoLoadSuccess(successLogin);
+    },
+    [setAutoLoadSuccess]
+  );
 
   // Upon login check api authorization
   useEffect(() => {
@@ -76,7 +79,7 @@ export const AuthContextProvider = ({ children }: any) => {
 
   const AuthState = useMemo(() => {
     return {
-      hasLoaded,
+      hasLoaded: loginResponse !== null || autoLoadSuccess === false,
       isLoggedIn: loginResponse !== null,
       userId: loginResponse?.googleId || "",
       isAuthorized,
@@ -85,7 +88,7 @@ export const AuthContextProvider = ({ children }: any) => {
       onAutoLoadFinished,
     };
   }, [
-    hasLoaded,
+    autoLoadSuccess,
     loginResponse,
     isAuthorized,
     handleLogin,
