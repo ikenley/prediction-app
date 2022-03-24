@@ -1,0 +1,22 @@
+version: 0.2
+
+env:
+  parameter-store:
+    DOCKER_USERNAME: /docker/username
+    DOCKER_PASSWORD: /docker/password
+
+phases:
+  install:
+    runtime-versions:
+      nodejs: 12
+    commands:
+      - PROJECT_DIR=$(pwd)
+      - cd "$PROJECT_DIR/client"
+      - npm ci
+  build:
+    commands:
+      - cd "$PROJECT_DIR/client"
+      - npx cypress run
+  post_build:
+    commands:
+      - echo "Tests completed on $(date)"
