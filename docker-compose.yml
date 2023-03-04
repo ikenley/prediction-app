@@ -4,8 +4,6 @@ services:
     build:
       context: ./TemplateApi
     container_name: template-app
-    # expose:
-    #   - "5000"
     ports:
       - "5000:5000"
     restart: always
@@ -18,8 +16,23 @@ services:
     restart: always
     links:
       - "api"
-
-
-
-
-     
+  db:
+    image: postgres:14
+    ports:
+      - 5433:5432
+    environment:
+      POSTGRES_PASSWORD: $PGPASSWORD
+  flyway:
+    image: flyway/flyway:9.15.1
+    command: migrate
+    volumes:
+      - ${pwd}/migrations/sql:/flyway/sql
+      - ${pwd}/migrations/conf:/flyway/conf
+    environment:
+      FLYWAY_URL: "jdbc:postgresql://${PGHOST}:${PGPORT}/${PGDATABASE}"
+      FLYWAY_USER: $PGUSER
+      FLYWAY_PASSWORD: $PGPASSWORD
+      FLYWAY_DEFAULT_SCHEMA: flyway
+      FLYWAY_CONNECT_RETRIES: 2
+    depends_on:
+      - db

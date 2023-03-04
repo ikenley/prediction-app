@@ -4,6 +4,16 @@ Sample .NET Core API to be hosted in a Docker container
 
 ---
 
+## Getting Started
+
+```
+cd api
+dotnet build
+dotnet run
+```
+
+---
+
 ## Docker
 
 - [docs](https://docs.microsoft.com/en-us/aspnet/core/host-and-deploy/docker/building-net-docker-images?view=aspnetcore-5.0)
