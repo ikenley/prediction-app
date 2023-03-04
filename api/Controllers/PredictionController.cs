@@ -14,10 +14,10 @@ namespace PredictionApi.Controllers
     [Route("api/[controller]")]
     public class PredictionController : ControllerBase
     {
-        private readonly ILogger<ResultController> _logger;
+        private readonly ILogger<PredictionController> _logger;
         private readonly IPredictionService _predictionService;
 
-        public PredictionController(ILogger<ResultController> logger, IPredictionService predictionService)
+        public PredictionController(ILogger<PredictionController> logger, IPredictionService predictionService)
         {
             _logger = logger;
             _predictionService = predictionService;
