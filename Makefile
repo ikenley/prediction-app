@@ -1,6 +1,7 @@
 # Start local dev dependencies
 deps:
-	docker-compose up db flyway -d
+	docker-compose up db -d
+	make migrate
 
 # Start everything
 start: 
@@ -8,3 +9,6 @@ start:
 
 down: 
 	docker-compose down
+
+migrate:
+	docker-compose up flyway
