@@ -27,12 +27,15 @@ services:
     command: migrate
     volumes:
       - ${pwd}/migrations/sql:/flyway/sql
-      - ${pwd}/migrations/conf:/flyway/conf
+      - ${pwd}/migrations/local:/flyway/local
     environment:
       FLYWAY_URL: "jdbc:postgresql://${PGHOST}:${PGPORT}/${PGDATABASE}"
       FLYWAY_USER: $PGUSER
       FLYWAY_PASSWORD: $PGPASSWORD
       FLYWAY_DEFAULT_SCHEMA: flyway
       FLYWAY_CONNECT_RETRIES: 2
+      FLYWAY_LOCATIONS: "filesystem:./sql,filesystem:./local"
+      FLYWAY_PLACEHOLDERS_USER_ID: $FLYWAY_PLACEHOLDERS_USER_ID
+      FLYWAY_PLACEHOLDERS_PREDICTION_APP_USER_PW: $FLYWAY_PLACEHOLDERS_PREDICTION_APP_USER_PW
     depends_on:
       - db
