@@ -6,11 +6,7 @@ import { AuthContext } from "../auth/AuthContext";
 import LoginButton from "../auth/LoginButton";
 import LogoutButton from "../auth/LogoutButton";
 
-type Props = {
-  launchTour?: () => void;
-};
-
-const NavbarMain = ({ launchTour }: Props) => {
+const NavbarMain = () => {
   const authContext = useContext(AuthContext);
   const { isLoggedIn } = authContext;
 
@@ -39,28 +35,6 @@ const NavbarMain = ({ launchTour }: Props) => {
           <NavItem className={classNames({ "d-none": !isLoggedIn })}>
             <LogoutButton />
           </NavItem>
-          {/* <NavDropdown
-            title={<span>Resources</span>}
-            id="navbar-context-menu"
-            className="navbar-context-menu"
-            alignRight
-          >
-            {launchTour ? (
-              <NavDropdown.Item onClick={handleTourClick}>
-                Walkthrough
-              </NavDropdown.Item>
-            ) : null}
-            <NavDropdown.Item target="_blank" href="/faq.pdf">
-              FAQ
-            </NavDropdown.Item>
-            <NavDropdown.Item href="mailto:todo@todo.com">
-              Contact Us
-            </NavDropdown.Item>
-            <NavDropdown.Divider />
-            <NavDropdown.Item target="_blank" href="https://www.google.com">
-              Foo
-            </NavDropdown.Item>
-          </NavDropdown>*/}
         </Nav>
       </Navbar.Collapse>
     </Navbar>

@@ -2,21 +2,21 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Amazon.DynamoDBv2;
-using Amazon.DynamoDBv2.DataModel;
+using Microsoft.EntityFrameworkCore;
+using PredictionApi.Models;
 
 namespace PredictionApi.Models
 {
     public class PredictionService : IPredictionService
     {
-        private IAmazonDynamoDB _dynamoDBClient;
 
         private IUserService _userService;
+        private readonly DataContext _dataContext;
 
-        public PredictionService(IAmazonDynamoDB dynamoDBClient, IUserService userService)
+        public PredictionService(DataContext dataContext, IUserService userService)
         {
-            _dynamoDBClient = dynamoDBClient;
-            _userService = userService;
+            this._dataContext = dataContext;
+            this._userService = userService;
         }
 
         public async Task<Prediction> CreateAsync(string userId, Prediction prediction)
@@ -32,48 +32,56 @@ namespace PredictionApi.Models
             p.CreatedOn = DateTime.Now;
             p.LastUpdated = DateTime.Now;
 
-            var context = new DynamoDBContext(_dynamoDBClient);
-            await context.SaveAsync(p);
+            this._dataContext.Add(p);
+            await this._dataContext.SaveChangesAsync();
 
             return p;
         }
 
-        public async Task DeleteAsync(string userId, Guid id)
-        {
-            var context = new DynamoDBContext(_dynamoDBClient);
-            await context.DeleteAsync<Prediction>(userId, id);
-        }
-
         public async Task<Prediction> GetByIdAsync(string userId, Guid id)
         {
-            var context = new DynamoDBContext(_dynamoDBClient);
-            var prediction = await context.LoadAsync<Prediction>(userId, id);
+            var prediction = await this._dataContext.Predictions.FindAsync(id);
+
+            if (prediction.UserId != userId)
+            {
+                throw new UnauthorizedAccessException("Unauthorized access to prediction");
+            }
+
             return prediction;
         }
 
         public async Task<List<Prediction>> GetByUserIdAsync(string userId)
         {
-            var context = new DynamoDBContext(_dynamoDBClient);
-            var predictions = await context.QueryAsync<Prediction>(userId).GetRemainingAsync();
+            var predictions = await this._dataContext.Predictions
+                .AsNoTracking()
+                .Where(p => p.UserId == userId)
+                .ToListAsync();
+
             predictions = predictions.OrderByDescending(r => r.CreatedOn).ToList();
             return predictions;
         }
 
         public async Task<Prediction> UpdateAsync(string userId, Prediction prediction)
         {
-            var old = await GetByIdAsync(userId, prediction.Id);
+            var p = await GetByIdAsync(userId, prediction.Id);
 
-            old.Name = prediction.Name;
-            old.Probability = prediction.Probability;
-            old.RevisitOn = prediction.RevisitOn.Date;
-            old.IsTrue = prediction.IsTrue;
-            old.Description = prediction.Description;
-            old.LastUpdated = DateTime.Now;
+            p.Name = prediction.Name;
+            p.Probability = prediction.Probability;
+            p.RevisitOn = prediction.RevisitOn.Date;
+            p.IsTrue = prediction.IsTrue;
+            p.Description = prediction.Description;
+            p.LastUpdated = DateTime.Now;
 
-            var context = new DynamoDBContext(_dynamoDBClient);
-            await context.SaveAsync(old);
+            await this._dataContext.SaveChangesAsync();
 
-            return old;
+            return p;
+        }
+
+        public async Task DeleteAsync(string userId, Guid id)
+        {
+            var prediction = await GetByIdAsync(userId, id);
+            this._dataContext.Predictions.Remove(prediction);
+            await this._dataContext.SaveChangesAsync();
         }
     }
 }

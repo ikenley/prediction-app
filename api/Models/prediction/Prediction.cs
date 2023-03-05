@@ -1,14 +1,12 @@
 using System;
-using Amazon.DynamoDBv2.DataModel;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace PredictionApi.Models
 {
-    [DynamoDBTable("Predictions")]
+    [Table("prediction", Schema = "prediction")]
     public class Prediction
     {
-        [DynamoDBRangeKey]
         public Guid Id { get; set; }
-        [DynamoDBHashKey]
         public string UserId { get; set; }
         public string Name { get; set; }
         public Double Probability { get; set; }

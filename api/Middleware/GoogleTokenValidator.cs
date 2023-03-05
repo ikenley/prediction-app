@@ -51,7 +51,6 @@ namespace PredictionApi.Middleware
             {
                 Console.WriteLine(e);
                 throw;
-
             }
         }
     }

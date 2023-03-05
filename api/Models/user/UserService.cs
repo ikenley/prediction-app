@@ -2,18 +2,16 @@ using System;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Threading.Tasks;
-using Amazon.DynamoDBv2;
-using Amazon.DynamoDBv2.DataModel;
 
 namespace PredictionApi.Models
 {
     public class UserService : IUserService
     {
-        private IAmazonDynamoDB _dynamoDBClient;
+        private readonly DataContext _dataContext;
 
-        public UserService(IAmazonDynamoDB dynamoDBClient)
+        public UserService(DataContext dataContext)
         {
-            _dynamoDBClient = dynamoDBClient;
+            this._dataContext = dataContext;
         }
 
         public async Task<User> CreateOrUpdateAsync(ClaimsPrincipal principal)
@@ -47,16 +45,15 @@ namespace PredictionApi.Models
 
         private async Task<User> Create(User user)
         {
-            var context = new DynamoDBContext(_dynamoDBClient);
-            await context.SaveAsync(user);
+            this._dataContext.Users.Add(user);
+            await this._dataContext.SaveChangesAsync();
 
             return user;
         }
 
         public async Task<User> GetByIdAsync(string id)
         {
-            var context = new DynamoDBContext(_dynamoDBClient);
-            var user = await context.LoadAsync<User>(id);
+            var user = await this._dataContext.Users.FindAsync(id);
             return user;
         }
 
@@ -64,8 +61,7 @@ namespace PredictionApi.Models
         {
             user.LastAccessed = DateTime.Now;
 
-            var context = new DynamoDBContext(_dynamoDBClient);
-            await context.SaveAsync(user);
+            await this._dataContext.SaveChangesAsync();
 
             return user;
         }

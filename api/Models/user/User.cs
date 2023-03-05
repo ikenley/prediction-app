@@ -1,12 +1,11 @@
 using System;
-using Amazon.DynamoDBv2.DataModel;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace PredictionApi.Models
 {
-    [DynamoDBTable("Users")]
+    [Table("user", Schema = "iam")]
     public class User
     {
-        [DynamoDBHashKey]
         public string Id { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
