@@ -1,6 +1,6 @@
 # Start local dev dependencies
 deps:
-	docker-compose up db -d
+	docker-compose up -d db
 	make migrate
 
 # Start everything
