@@ -9,7 +9,7 @@ phases:
     commands:
       - echo Build started on `date`
       - echo "Running flyway migrations"
-      > 
+      - > 
         docker run --rm 
         -v ./migrations/sql:/flyway/sql
         -e FLYWAY_URL=$FLYWAY_URL 
