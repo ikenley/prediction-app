@@ -11,7 +11,7 @@ phases:
       - echo "Running flyway migrations"
       - > 
         docker run --rm 
-        -v ./migrations/sql:/flyway/sql
+        -v "$(pwd)/migrations/sql:/flyway/sql"
         -e FLYWAY_URL=$FLYWAY_URL 
         -e FLYWAY_USER=$FLYWAY_USER 
         -e FLYWAY_PASSWORD=$FLYWAY_PASSWORD 
