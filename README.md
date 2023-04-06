@@ -23,3 +23,11 @@ docker-compose stop
 docker-compose rm
 docker-compose rmi ‘containerimageid’
 ```
+
+---
+
+## Commands
+
+```
+aws ecs describe-task-definition --task-definition prediction-app:34 | jq '.taskDefinition' > taskdef.json
+```

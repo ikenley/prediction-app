@@ -42,5 +42,17 @@ phases:
       - cd ..
       - printf '[{"name":"%s","imageUri":"%s"},{"name":"%s","imageUri":"%s"}]' $CLIENT_IMAGE_REPO_NAME $CLIENT_IMAGE_URI $API_IMAGE_REPO_NAME $API_IMAGE_URI > imagedefinitions.json
       - cat imagedefinitions.json
+      - >
+        jq -n --arg image_uri "$API_IMAGE_URI" 
+        '{"ImageURI": $image_uri}' > imageDetailApi.json
+      - cat imageDetailApi.json
+      - >
+        jq -n --arg image_uri "$CLIENT_IMAGE_URI" 
+        '{"ImageURI": $image_uri}' > imageDetailFe.json
+      - cat imageDetailFe.json
 artifacts:
-  files: imagedefinitions.json
+  files: 
+    - appspec.yaml
+    - taskdef.json
+    - imageDetailApi.json
+    - imageDetailFe.json
