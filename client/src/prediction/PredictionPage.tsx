@@ -6,8 +6,6 @@ import Skeleton from "react-loading-skeleton";
 import { Prediction } from "../types";
 import Navbar from "../shared/Navbar";
 import { AuthContext } from "../auth/AuthContext";
-import Tour from "../shared/Tour";
-import tourSteps from "./tourSteps";
 import LoginButton from "../auth/LoginButton";
 import CreatePredictionModal from "./CreatePredictionModal";
 import PredictionEditor from "./PredictionEditor";
@@ -17,13 +15,8 @@ const PredictionPage = () => {
   const { isAuthorized, hasLoaded } = useContext(AuthContext);
   let { defaultPredictionId }: any = useParams();
   const [defaultHasLoaded, setDefaultHasLoaded] = useState<boolean>(false);
-  const [showTour, setShowTour] = useState<boolean>(false);
   const [predictions, setPredictions] = useState<Prediction[] | null>(null);
   const [selPrediction, setSelPrediction] = useState<Prediction | null>(null);
-
-  const launchTour = useCallback(() => {
-    setShowTour(true);
-  }, [setShowTour]);
 
   const createPrediction = useCallback(
     async (prediction: Prediction) => {
@@ -115,7 +108,7 @@ const PredictionPage = () => {
 
   return (
     <div className="overview-page">
-      <Navbar launchTour={launchTour} />
+      <Navbar />
       <main role="main" className="container-xl container-xxl pt-3 pb-5">
         <div className="jumbotron py-2 py-md-3">
           <h1 className="display-5">Predictions</h1>
@@ -172,7 +165,6 @@ const PredictionPage = () => {
           deletePrediction={deletePrediction}
         />
       </main>
-      <Tour steps={tourSteps} show={showTour} setShow={setShowTour} />
     </div>
   );
 };

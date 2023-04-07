@@ -1,25 +1,44 @@
 version: "3.9"
 services:
-  api:
-    build:
-      context: ./TemplateApi
-    container_name: template-app
-    # expose:
-    #   - "5000"
+  # api:
+  #   build:
+  #     context: ./TemplateApi
+  #   container_name: template-app
+  #   ports:
+  #     - "5000:5000"
+  #   restart: always
+  # client:
+  #   build:
+  #     context: ./client
+  #   container_name: template-api
+  #   ports:
+  #     - "8080:80"
+  #   restart: always
+  #   links:
+  #     - "api"
+  db:
+    image: postgres:14
     ports:
-      - "5000:5000"
-    restart: always
-  client:
-    build:
-      context: ./client
-    container_name: template-api
-    ports:
-      - "8080:80"
-    restart: always
-    links:
-      - "api"
-
-
-
-
-     
+      - 5433:5432
+    environment:
+      POSTGRES_PASSWORD: $PGPASSWORD
+  flyway:
+    image: flyway/flyway:9.15.1
+    command: migrate
+    volumes:
+      - ./migrations/sql:/flyway/sql
+      - ./migrations/local:/flyway/local
+    environment:
+      FLYWAY_URL: "jdbc:postgresql://${PGHOST}:${PGPORT}/${PGDATABASE}"
+      FLYWAY_USER: $PGUSER
+      FLYWAY_PASSWORD: $PGPASSWORD
+      FLYWAY_DEFAULT_SCHEMA: flyway
+      FLYWAY_CONNECT_RETRIES: 2
+      FLYWAY_LOCATIONS: "filesystem:./sql,filesystem:./local"
+      FLYWAY_PLACEHOLDERS_USER_ID: $FLYWAY_PLACEHOLDERS_USER_ID
+      FLYWAY_PLACEHOLDERS_PREDICTION_APP_USER_PW: $FLYWAY_PLACEHOLDERS_PREDICTION_APP_USER_PW
+      FLYWAY_PLACEHOLDERS_REVISIT_PREDICTION_USER_PW: $FLYWAY_PLACEHOLDERS_REVISIT_PREDICTION_USER_PW 
+    depends_on:
+      - db
+    extra_hosts:
+      - "host.docker.internal:host-gateway"

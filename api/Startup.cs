@@ -15,8 +15,6 @@ using Serilog;
 using PredictionApi.Middleware;
 using PredictionApi.Models;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Amazon.DynamoDBv2;
-using Amazon.DynamoDBv2.DataModel;
 
 namespace PredictionApi
 {
@@ -35,17 +33,15 @@ namespace PredictionApi
             // Fetch connection string
             // Name will be main-connection-string or main-connection-string-local
             // string connectionStringName = Configuration["main-connection-string-name"];
-            // string connectionString = Configuration[connectionStringName];
-            // services.AddDbContext<DataContext>(options =>
-            //     options.UseNpgsql(connectionString)
-            //         .UseSnakeCaseNamingConvention()
-            // );
+            string connectionString = Configuration.GetConnectionString("main");
+            services.AddDbContext<DataContext>(options =>
+                options.UseNpgsql(connectionString)
+                    .UseSnakeCaseNamingConvention()
+            );
 
             services.AddHttpContextAccessor();
 
             services.AddDefaultAWSOptions(Configuration.GetAWSOptions());
-            services.AddAWSService<IAmazonDynamoDB>();
-            services.AddScoped<IDynamoDBContext, DynamoDBContext>();
 
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<IPredictionService, PredictionService>();

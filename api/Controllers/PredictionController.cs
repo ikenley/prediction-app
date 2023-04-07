@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -14,10 +13,10 @@ namespace PredictionApi.Controllers
     [Route("api/[controller]")]
     public class PredictionController : ControllerBase
     {
-        private readonly ILogger<ResultController> _logger;
+        private readonly ILogger<PredictionController> _logger;
         private readonly IPredictionService _predictionService;
 
-        public PredictionController(ILogger<ResultController> logger, IPredictionService predictionService)
+        public PredictionController(ILogger<PredictionController> logger, IPredictionService predictionService)
         {
             _logger = logger;
             _predictionService = predictionService;

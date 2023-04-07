@@ -1,18 +1,16 @@
 using System;
-using Amazon.DynamoDBv2.DataModel;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace PredictionApi.Models
 {
-    [DynamoDBTable("Users")]
+    [Table("user", Schema = "iam")]
     public class User
     {
-        [DynamoDBHashKey]
         public string Id { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public string Email { get; set; }
         public DateTime Created { get; set; }
-        public DateTime LastUpdated { get; set; }
 
         public DateTime LastAccessed { get; set; }
 
@@ -25,7 +23,6 @@ namespace PredictionApi.Models
             LastName = lastName;
             Email = email;
             Created = DateTime.Now;
-            LastUpdated = DateTime.Now;
             LastAccessed = DateTime.Now;
         }
 

@@ -4,7 +4,7 @@
 # https://typeofnan.dev/how-to-serve-a-react-app-with-nginx-in-docker/
 
 # Name the node stage "builder"
-FROM node:15 AS builder
+FROM node:16 AS builder
 # Set IMAGE_TAG ENV var
 ARG IMAGE_TAG
 ENV REACT_APP_IMAGE_TAG=$IMAGE_TAG
@@ -18,8 +18,7 @@ RUN npm install && npm run build
 # nginx state for serving content
 FROM nginx:alpine
 # Copy nginx conf
-ARG BRANCH_NAME
-COPY nginx/${BRANCH_NAME}/nginx.conf /etc/nginx/nginx.conf
+COPY nginx/nginx.conf /etc/nginx/nginx.conf
 # Set working directory to nginx asset directory
 WORKDIR /usr/share/nginx/html
 # Remove default nginx static assets
