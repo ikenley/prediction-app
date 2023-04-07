@@ -4,7 +4,7 @@
 # https://typeofnan.dev/how-to-serve-a-react-app-with-nginx-in-docker/
 
 # Name the node stage "builder"
-FROM node:18 AS builder
+FROM node:16 AS builder
 # Set IMAGE_TAG ENV var
 ARG IMAGE_TAG
 ENV REACT_APP_IMAGE_TAG=$IMAGE_TAG
