@@ -44,6 +44,7 @@ namespace PredictionApi
             services.AddDefaultAWSOptions(Configuration.GetAWSOptions());
 
             services.AddScoped<IUserService, UserService>();
+            services.AddScoped<ISharedPredictionService, SharedPredictionService>();
             services.AddScoped<IPredictionService, PredictionService>();
 
             // Add authentication

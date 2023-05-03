@@ -13,11 +13,17 @@ namespace PredictionApi.Models
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            modelBuilder.Entity<SharedPrediction>()
+                .HasOne(e => e.User)
+                .WithMany()
+                .HasForeignKey(e => e.UserId)
+                .IsRequired();
             //modelBuilder.Entity<DataPoint>().ToTable(nameof(DataPoint), t => t.ExcludeFromMigrations());
             //modelBuilder.Entity<CustomMarketShareOption>().HasKey(t => new { t.UnitId, t.RegionId, t.OptionId });
         }
 
         public DbSet<Prediction> Predictions { get; set; }
+        public DbSet<SharedPrediction> SharedPredictions { get; set; }
         public DbSet<User> Users { get; set; }
     }
 }

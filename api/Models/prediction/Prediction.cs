@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace PredictionApi.Models
@@ -15,5 +16,9 @@ namespace PredictionApi.Models
         public string Description { get; set; }
         public DateTime CreatedOn { get; set; }
         public DateTime LastUpdated { get; set; }
+
+        public bool CanShare { get; set; }
+
+        public List<SharedPrediction> SharedPredictions { get; set; } = new List<SharedPrediction>();
     }
 }

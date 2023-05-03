@@ -10,12 +10,18 @@ namespace PredictionApi.Models
     public class PredictionService : IPredictionService
     {
 
+        private readonly ISharedPredictionService _sharedPredictionService;
         private IUserService _userService;
         private readonly DataContext _dataContext;
 
-        public PredictionService(DataContext dataContext, IUserService userService)
+        public PredictionService(
+            DataContext dataContext,
+            ISharedPredictionService sharedPredictionService,
+            IUserService userService
+        )
         {
             this._dataContext = dataContext;
+            this._sharedPredictionService = sharedPredictionService;
             this._userService = userService;
         }
 
@@ -45,6 +51,11 @@ namespace PredictionApi.Models
             if (prediction.UserId != userId)
             {
                 throw new UnauthorizedAccessException("Unauthorized access to prediction");
+            }
+
+            if (prediction.CanShare)
+            {
+                prediction.SharedPredictions = await this._sharedPredictionService.GetByPredictionIdAsync(prediction.Id);
             }
 
             return prediction;
