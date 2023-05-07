@@ -14,6 +14,9 @@ namespace PredictionApi.Models
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<SharedPrediction>()
+                .HasKey(s => new { s.PredictionId, s.UserId });
+
+            modelBuilder.Entity<SharedPrediction>()
                 .HasOne(e => e.User)
                 .WithMany()
                 .HasForeignKey(e => e.UserId)

@@ -7,7 +7,7 @@ using Microsoft.IdentityModel.Tokens;
 
 namespace PredictionApi.Middleware
 {
-    public class GoogleTokenValidator : ISecurityTokenValidator
+    public class GoogleTokenValidator : JwtSecurityTokenHandler, ISecurityTokenValidator
     {
         private readonly JwtSecurityTokenHandler _tokenHandler;
 
@@ -16,16 +16,16 @@ namespace PredictionApi.Middleware
             _tokenHandler = new JwtSecurityTokenHandler();
         }
 
-        public bool CanValidateToken => true;
+        public override bool CanValidateToken => true;
 
-        public int MaximumTokenSizeInBytes { get; set; } = TokenValidationParameters.DefaultMaximumTokenSizeInBytes;
+        public override int MaximumTokenSizeInBytes { get; set; } = TokenValidationParameters.DefaultMaximumTokenSizeInBytes;
 
-        public bool CanReadToken(string securityToken)
+        public override bool CanReadToken(string securityToken)
         {
             return _tokenHandler.CanReadToken(securityToken);
         }
 
-        public ClaimsPrincipal ValidateToken(string securityToken, TokenValidationParameters validationParameters, out SecurityToken validatedToken)
+        public override ClaimsPrincipal ValidateToken(string securityToken, TokenValidationParameters validationParameters, out SecurityToken validatedToken)
         {
             validatedToken = null;
             var payload = GoogleJsonWebSignature.ValidateAsync(securityToken, new GoogleJsonWebSignature.ValidationSettings()).Result; // here is where I delegate to Google to validate
@@ -45,6 +45,7 @@ namespace PredictionApi.Middleware
             {
                 var principle = new ClaimsPrincipal();
                 principle.AddIdentity(new ClaimsIdentity(claims, "CustomGoogleJWT")); //, AuthenticationTypes.Password
+                validatedToken = this.ReadJwtToken(securityToken);
                 return principle;
             }
             catch (Exception e)
