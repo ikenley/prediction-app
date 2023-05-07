@@ -37,6 +37,7 @@ namespace PredictionApi.Models
             p.Description = prediction.Description;
             p.CreatedOn = DateTime.Now;
             p.LastUpdated = DateTime.Now;
+            p.CanShare = prediction.CanShare;
 
             this._dataContext.Add(p);
             await this._dataContext.SaveChangesAsync();

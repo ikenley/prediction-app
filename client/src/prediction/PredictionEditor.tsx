@@ -1,6 +1,7 @@
-import React, { useState, useCallback, useEffect } from "react";
+import React, { useState, useCallback, useEffect, useRef } from "react";
 import { Button, Modal, Form, Row, Col } from "react-bootstrap";
 import numeral from "numeral";
+import { toast } from "react-toastify";
 import { Prediction, defaultPrediction } from "../types";
 import { Today } from "../constants";
 
@@ -25,6 +26,7 @@ const PredictionEditor = ({
   const [tmpPrediction, setTmpPrediction] = useState<Prediction>(
     defaultPrediction
   );
+  const shareLinkRef = useRef<HTMLInputElement>(null);
 
   const closeModal = useCallback(() => {
     selectPrediction(null);
@@ -62,6 +64,19 @@ const PredictionEditor = ({
       deletePrediction(tmpPrediction);
     }
   }, [tmpPrediction, deletePrediction]);
+
+  const copyToClipboard = useCallback(
+    (e: any) => {
+      if (!shareLinkRef.current) {
+        return;
+      }
+      shareLinkRef.current.select();
+      navigator.clipboard.writeText(shareLinkRef.current.value);
+      e.target.focus();
+      toast.success("Share link copied to clipboard");
+    },
+    [shareLinkRef]
+  );
 
   // When prediction prop changes, reload tmpPrediction
   useEffect(() => {
@@ -153,6 +168,42 @@ const PredictionEditor = ({
               />
             </Col>
           </Form.Group>
+          <Form.Group as={Row} controlId="predictionEditorCanShare">
+            <Col sm={{ span: 10, offset: 2 }}>
+              <Form.Check
+                label="Allow sharing of this prediction"
+                name="canShare"
+                checked={tmpPrediction.canShare === true}
+                onChange={handleChange}
+              />
+            </Col>
+          </Form.Group>
+          {tmpPrediction.canShare && (
+            <Form.Group as={Row} controlId="predictionEditorShareLink">
+              <Form.Label column sm={2}>
+                Share Link
+              </Form.Label>
+              <Col sm={10}>
+                <div className="input-group mb-3">
+                  <div className="input-group-prepend">
+                    <Button
+                      onClick={copyToClipboard}
+                      title="Copy share link to clipboard"
+                    >
+                      <i className="fas fa-copy"></i>
+                    </Button>
+                  </div>
+                  <Form.Control
+                    ref={shareLinkRef}
+                    name="revisitOn"
+                    value={`${global.location.protocol}//${global.location.host}/share/${tmpPrediction.id}`}
+                    onChange={noOp}
+                    readOnly
+                  />
+                </div>
+              </Col>
+            </Form.Group>
+          )}
           <Form.Group as={Row} controlId="formHorizontalCheck">
             <Col sm={{ span: 10, offset: 2 }}>
               <Form.Check

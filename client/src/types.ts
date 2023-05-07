@@ -32,6 +32,7 @@ export type Prediction = {
   description: string;
   createdOn: Date;
   lastUpdated: Date;
+  canShare: boolean;
 };
 
 export const defaultPrediction: Prediction = {
@@ -44,4 +45,5 @@ export const defaultPrediction: Prediction = {
   description: "",
   createdOn: new Date(),
   lastUpdated: new Date(),
+  canShare: false,
 };

@@ -21,12 +21,14 @@ const CreatePredictionModal = ({ createPrediction }: Props) => {
   }, [setShowModal]);
 
   const handleChange = useCallback(
-    (e: React.ChangeEvent<HTMLSelectElement>) => {
+    (e: React.ChangeEvent<HTMLInputElement>) => {
       let { name, type } = e.currentTarget;
       let value: any = e.currentTarget.value;
 
       if (type === "date") {
         value = new Date(value);
+      } else if (type === "checkbox") {
+        value = e.currentTarget.checked;
       }
 
       setPrediction((p) => {
@@ -117,6 +119,16 @@ const CreatePredictionModal = ({ createPrediction }: Props) => {
                   value={prediction.description}
                   onChange={handleChange}
                   placeholder="Any additional detail..."
+                />
+              </Col>
+            </Form.Group>
+            <Form.Group as={Row} controlId="createPredictionModalCanShare">
+              <Col sm={{ span: 10, offset: 2 }}>
+                <Form.Check
+                  label="Allow sharing of this prediction"
+                  name="canShare"
+                  checked={prediction.canShare === true}
+                  onChange={handleChange}
                 />
               </Col>
             </Form.Group>
