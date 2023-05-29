@@ -1,22 +1,55 @@
 import React, { useState, useCallback, useEffect, useContext } from "react";
 import axios from "axios";
+import { useQueryClient, useMutation } from "react-query";
 import { useParams, Link } from "react-router-dom";
 import { Tabs, Tab, Alert } from "react-bootstrap";
 import Skeleton from "react-loading-skeleton";
-import { Prediction } from "../types";
+import { toast } from "react-toastify";
+import { Prediction, CreateSharedPredictionRequest } from "../types";
+import { QueryKey } from "../constants";
 import Navbar from "../shared/Navbar";
 import { AuthContext } from "../auth/AuthContext";
 import LoginButton from "../auth/LoginButton";
+import usePredictionDetail from "./usePredictionDetail";
 import CreatePredictionModal from "./CreatePredictionModal";
+import SharedPredictionModal from "./SharedPredictionModal";
 import EditPredictionModal from "./EditPredictionModal";
 import PredictionGrid from "./PredictionGrid";
 
 const PredictionPage = () => {
   const { isAuthorized, hasLoaded } = useContext(AuthContext);
-  let { defaultPredictionId }: any = useParams();
+  const queryClient = useQueryClient();
+  let { defaultPredictionId, sharedPredictionId }: any = useParams();
   const [defaultHasLoaded, setDefaultHasLoaded] = useState<boolean>(false);
   const [predictions, setPredictions] = useState<Prediction[] | null>(null);
   const [selPrediction, setSelPrediction] = useState<Prediction | null>(null);
+
+  // Shared Prediction
+  const sharedPredictionQuery = usePredictionDetail(sharedPredictionId);
+  const [showSharedModal, setShowSharedModal] = useState<boolean>(
+    sharedPredictionId !== undefined
+  );
+  const closeSharedModal = useCallback(() => {
+    setShowSharedModal(false);
+  }, [setShowSharedModal]);
+  const sharedMutation = useMutation(
+    (req: CreateSharedPredictionRequest) => {
+      return axios.post("/api/shared-prediction", req);
+    },
+    {
+      onSuccess: () => {
+        queryClient.invalidateQueries([QueryKey, sharedPredictionId]);
+      },
+    }
+  );
+  const createSharedPrediction = useCallback(
+    (req: CreateSharedPredictionRequest) => {
+      sharedMutation.mutate(req);
+      setShowSharedModal(false);
+      toast.success("Saved prediction");
+    },
+    [sharedMutation, setShowSharedModal]
+  );
 
   const createPrediction = useCallback(
     async (prediction: Prediction) => {
@@ -158,6 +191,13 @@ const PredictionPage = () => {
           <Skeleton height={420} />
         )}
 
+        <SharedPredictionModal
+          showModal={showSharedModal}
+          closeModal={closeSharedModal}
+          createSharedPrediction={createSharedPrediction}
+          isLoading={sharedPredictionQuery.isLoading}
+          prediction={sharedPredictionQuery.data}
+        />
         <EditPredictionModal
           selPrediction={selPrediction}
           selectPrediction={selectPrediction}

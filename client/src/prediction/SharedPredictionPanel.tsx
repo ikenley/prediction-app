@@ -8,7 +8,6 @@ type Props = {
 };
 
 const SharedPredictionPanel = ({ isLoading, sharedPredictions }: Props) => {
-  console.log("sharedPredictions", sharedPredictions);
   return (
     <div className="shared-prediction-panel py-3">
       Shared Predictions

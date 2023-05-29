@@ -49,7 +49,7 @@ namespace PredictionApi.Models
         {
             var prediction = await this._dataContext.Predictions.FindAsync(id);
 
-            if (prediction.UserId != userId)
+            if (!prediction.CanShare && prediction.UserId != userId)
             {
                 throw new UnauthorizedAccessException("Unauthorized access to prediction");
             }

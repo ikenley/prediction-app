@@ -66,3 +66,8 @@ export type SharedPrediction = {
   lastUpdated: Date;
   user: User;
 };
+
+export type CreateSharedPredictionRequest = {
+  predictionId: string;
+  probability: number;
+};

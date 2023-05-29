@@ -28,6 +28,9 @@ const App = () => {
               <Route path="/p/:defaultPredictionId">
                 <PredictionPage />
               </Route>
+              <Route path="/share/:sharedPredictionId">
+                <PredictionPage />
+              </Route>
               <Route path="/">
                 <PredictionPage />
               </Route>

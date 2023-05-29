@@ -2,10 +2,9 @@ import React, { useState, useCallback, useEffect, useRef } from "react";
 import { Button, Modal, Form, Row, Col } from "react-bootstrap";
 import numeral from "numeral";
 import { toast } from "react-toastify";
-import axios from "axios";
-import { useQuery } from "react-query";
 import { Prediction, defaultPrediction } from "../types";
-import { Today, QueryKey } from "../constants";
+import { Today } from "../constants";
+import usePredictionDetail from "./usePredictionDetail";
 import SharedPredictionPanel from "./SharedPredictionPanel";
 
 // Modal that allows view/edit/delete Prediction
@@ -31,16 +30,9 @@ const EditPredictionModal = ({
   );
   const shareLinkRef = useRef<HTMLInputElement>(null);
 
-  const predictionId = selPrediction?.id || "";
+  const predictionId = selPrediction?.id;
 
-  const predictionDetail = useQuery<Prediction>(
-    [QueryKey.prediction, predictionId],
-    async () => {
-      const res = await axios.get(`/api/prediction/by-id/${predictionId}`);
-      return res.data;
-    },
-    { enabled: predictionId !== "" }
-  );
+  const predictionDetail = usePredictionDetail(predictionId);
 
   const closeModal = useCallback(() => {
     selectPrediction(null);
