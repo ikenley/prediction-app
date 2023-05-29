@@ -20,7 +20,7 @@ type Props = {
 // No operation for handling read-only inputs
 const noOp = () => {};
 
-const PredictionEditor = ({
+const EditPredictionModal = ({
   selPrediction,
   selectPrediction,
   updatePrediction,
@@ -182,7 +182,7 @@ const PredictionEditor = ({
               />
             </Col>
           </Form.Group>
-          <Form.Group as={Row} controlId="predictionEditorCanShare">
+          <Form.Group as={Row} controlId="EditPredictionModalCanShare">
             <Col sm={{ span: 10, offset: 2 }}>
               <Form.Check
                 label="Allow sharing of this prediction"
@@ -193,7 +193,7 @@ const PredictionEditor = ({
             </Col>
           </Form.Group>
           {tmpPrediction.canShare && (
-            <Form.Group as={Row} controlId="predictionEditorShareLink">
+            <Form.Group as={Row} controlId="EditPredictionModalShareLink">
               <Form.Label column sm={2}>
                 Share Link
               </Form.Label>
@@ -252,4 +252,4 @@ const PredictionEditor = ({
   );
 };
 
-export default PredictionEditor;
+export default EditPredictionModal;

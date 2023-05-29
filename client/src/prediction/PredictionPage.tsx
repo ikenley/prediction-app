@@ -8,7 +8,7 @@ import Navbar from "../shared/Navbar";
 import { AuthContext } from "../auth/AuthContext";
 import LoginButton from "../auth/LoginButton";
 import CreatePredictionModal from "./CreatePredictionModal";
-import PredictionEditor from "./PredictionEditor";
+import EditPredictionModal from "./EditPredictionModal";
 import PredictionGrid from "./PredictionGrid";
 
 const PredictionPage = () => {
@@ -158,7 +158,7 @@ const PredictionPage = () => {
           <Skeleton height={420} />
         )}
 
-        <PredictionEditor
+        <EditPredictionModal
           selPrediction={selPrediction}
           selectPrediction={selectPrediction}
           updatePrediction={updatePrediction}
