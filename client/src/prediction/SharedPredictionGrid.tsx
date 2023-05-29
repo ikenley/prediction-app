@@ -58,7 +58,11 @@ const PredictionGrid = ({ isLoading, sharedPredictions }: Props) => {
         <Skeleton height={420} />
       ) : sharedPredictions && sharedPredictions.length > 0 ? (
         <DataGrid columns={columns} data={sharedPredictions} rowHeight={40} />
-      ) : null}
+      ) : (
+        <div className="alert alert-secondary text-center">
+          No shared predictions exist
+        </div>
+      )}
     </div>
   );
 };

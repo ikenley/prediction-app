@@ -33,7 +33,7 @@ const PredictionEditor = ({
 
   const predictionId = selPrediction?.id || "";
 
-  const predictionDetail = useQuery(
+  const predictionDetail = useQuery<Prediction>(
     [QueryKey.prediction, predictionId],
     async () => {
       const res = await axios.get(`/api/prediction/by-id/${predictionId}`);
@@ -41,8 +41,6 @@ const PredictionEditor = ({
     },
     { enabled: predictionId !== "" }
   );
-
-  console.log("predictionDetail", predictionDetail);
 
   const closeModal = useCallback(() => {
     selectPrediction(null);
