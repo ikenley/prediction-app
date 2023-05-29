@@ -2,8 +2,11 @@ import React, { useState, useCallback, useEffect, useRef } from "react";
 import { Button, Modal, Form, Row, Col } from "react-bootstrap";
 import numeral from "numeral";
 import { toast } from "react-toastify";
+import axios from "axios";
+import { useQuery } from "react-query";
 import { Prediction, defaultPrediction } from "../types";
-import { Today } from "../constants";
+import { Today, QueryKey } from "../constants";
+import SharedPredictionPanel from "./SharedPredictionPanel";
 
 // Modal that allows view/edit/delete Prediction
 
@@ -27,6 +30,19 @@ const PredictionEditor = ({
     defaultPrediction
   );
   const shareLinkRef = useRef<HTMLInputElement>(null);
+
+  const predictionId = selPrediction?.id || "";
+
+  const predictionDetail = useQuery(
+    [QueryKey.prediction, predictionId],
+    async () => {
+      const res = await axios.get(`/api/prediction/by-id/${predictionId}`);
+      return res.data;
+    },
+    { enabled: predictionId !== "" }
+  );
+
+  console.log("predictionDetail", predictionDetail);
 
   const closeModal = useCallback(() => {
     selectPrediction(null);
@@ -216,6 +232,12 @@ const PredictionEditor = ({
             </Col>
           </Form.Group>
         </Form>
+        <hr />
+        <SharedPredictionPanel
+          isLoading={predictionDetail.isLoading}
+          sharedPredictions={predictionDetail.data?.sharedPredictions || []}
+        />
+        <hr />
         <Button variant="secondary" onClick={confirmDelete}>
           <i className="fas fa-trash" /> Delete
         </Button>

@@ -47,3 +47,20 @@ export const defaultPrediction: Prediction = {
   lastUpdated: new Date(),
   canShare: false,
 };
+
+export type User = {
+  firstName: string;
+  lastName: string;
+  email: string;
+  created: Date;
+  lastAccessed: Date;
+};
+
+export type SharedPrediction = {
+  predictionId: string;
+  userId: string;
+  probability: number;
+  createdOn: Date;
+  lastUpdated: Date;
+  user: User;
+};

@@ -35,6 +35,7 @@ namespace PredictionApi.Models
             var sharedPredictions = await this._dataContext.SharedPredictions
                 .AsNoTracking()
                 .Where(p => p.PredictionId == predictionId)
+                .Include(p => p.User)
                 .ToListAsync();
 
             sharedPredictions = sharedPredictions.OrderByDescending(r => r.CreatedOn).ToList();
