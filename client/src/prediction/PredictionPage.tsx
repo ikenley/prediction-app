@@ -26,9 +26,7 @@ const PredictionPage = () => {
 
   // Shared Prediction
   const sharedPredictionQuery = usePredictionDetail(sharedPredictionId);
-  const [showSharedModal, setShowSharedModal] = useState<boolean>(
-    sharedPredictionId !== undefined
-  );
+  const [showSharedModal, setShowSharedModal] = useState<boolean>(false);
   const closeSharedModal = useCallback(() => {
     setShowSharedModal(false);
   }, [setShowSharedModal]);
@@ -50,6 +48,13 @@ const PredictionPage = () => {
     },
     [sharedMutation, setShowSharedModal]
   );
+
+  // On page load, if shared prediction link, load SharedPrediction modal
+  useEffect(() => {
+    if (isAuthorized && sharedPredictionId !== undefined) {
+      setShowSharedModal(true);
+    }
+  }, [isAuthorized, sharedPredictionId, setShowSharedModal]);
 
   const createPrediction = useCallback(
     async (prediction: Prediction) => {

@@ -181,6 +181,7 @@ const EditPredictionModal = ({
                 name="canShare"
                 checked={tmpPrediction.canShare === true}
                 onChange={handleChange}
+                disabled
               />
             </Col>
           </Form.Group>
