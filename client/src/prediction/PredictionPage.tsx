@@ -60,8 +60,12 @@ const PredictionPage = () => {
     async (prediction: Prediction) => {
       const res = await axios.post("/api/prediction/create", prediction);
 
-      const nextPredictions = [...(predictions || []), res.data];
+      const newPrediction = res.data;
+      const nextPredictions = [...(predictions || []), newPrediction];
       setPredictions(nextPredictions);
+
+      // Immediately show the edit modal
+      setSelPrediction(newPrediction);
     },
     [predictions, setPredictions]
   );
