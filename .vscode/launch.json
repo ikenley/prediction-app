@@ -10,7 +10,7 @@
             "request": "launch",
             "preLaunchTask": "build",
             // If you have changed target frameworks, make sure to update the program path.
-            "program": "${workspaceFolder}/api/bin/Debug/net5.0/PredictionApi.dll",
+            "program": "${workspaceFolder}/api/bin/Debug/net6.0/PredictionApi.dll",
             "args": [],
             "cwd": "${workspaceFolder}/api",
             "stopAtEntry": false,

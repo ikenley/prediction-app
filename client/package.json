@@ -6,7 +6,7 @@
     "cypress": "cypress open",
     "cy:verify": "cypress verify",
     "cy:info": "cypress info",
-    "start": "cross-env NODE_OPTIONS=--openssl-legacy-provider react-scripts start",
+    "start": "cross-env react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
@@ -26,8 +26,10 @@
     "react-google-login": "^5.2.2",
     "react-intersection-observer": "^8.31.0",
     "react-loading-skeleton": "^2.2.0",
+    "react-query": "^3.39.3",
     "react-router-dom": "^5.2.0",
     "react-table": "^7.6.3",
+    "react-toastify": "^9.1.2",
     "react-virtualized-auto-sizer": "^1.0.5",
     "react-window": "^1.8.6",
     "uuid": "^8.3.2",
@@ -55,7 +57,7 @@
     "http-proxy-middleware": "^2.0.0",
     "node-sass": "^8.0.0",
     "prettier": "2.2.1",
-    "react-scripts": "4.0.3",
+    "react-scripts": "5.0.1",
     "typescript": "^4.2.3"
   },
   "eslintConfig": {

@@ -10,12 +10,18 @@ namespace PredictionApi.Models
     public class PredictionService : IPredictionService
     {
 
+        private readonly ISharedPredictionService _sharedPredictionService;
         private IUserService _userService;
         private readonly DataContext _dataContext;
 
-        public PredictionService(DataContext dataContext, IUserService userService)
+        public PredictionService(
+            DataContext dataContext,
+            ISharedPredictionService sharedPredictionService,
+            IUserService userService
+        )
         {
             this._dataContext = dataContext;
+            this._sharedPredictionService = sharedPredictionService;
             this._userService = userService;
         }
 
@@ -31,6 +37,7 @@ namespace PredictionApi.Models
             p.Description = prediction.Description;
             p.CreatedOn = DateTime.Now;
             p.LastUpdated = DateTime.Now;
+            p.CanShare = prediction.CanShare;
 
             this._dataContext.Add(p);
             await this._dataContext.SaveChangesAsync();
@@ -42,9 +49,14 @@ namespace PredictionApi.Models
         {
             var prediction = await this._dataContext.Predictions.FindAsync(id);
 
-            if (prediction.UserId != userId)
+            if (!prediction.CanShare && prediction.UserId != userId)
             {
                 throw new UnauthorizedAccessException("Unauthorized access to prediction");
+            }
+
+            if (prediction.CanShare)
+            {
+                prediction.SharedPredictions = await this._sharedPredictionService.GetByPredictionIdAsync(prediction.Id);
             }
 
             return prediction;

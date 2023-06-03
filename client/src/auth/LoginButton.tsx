@@ -3,7 +3,7 @@ import GoogleLogin from "react-google-login";
 import { AuthContext } from "../auth/AuthContext";
 
 const responseGoogle = (response: any) => {
-  console.log(response);
+  //console.log(response);
 };
 
 const LoginButton = () => {

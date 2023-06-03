@@ -220,7 +220,7 @@ const DataGrid = ({
               handleRowClick={handleRowClick}
               rowHeight={rowHeight}
               maxHeight={maxHeight}
-              parentWidth={width - 1}
+              parentWidth={(width || 2) - 1}
             />
           </div>
         )}

@@ -44,6 +44,7 @@ namespace PredictionApi
             services.AddDefaultAWSOptions(Configuration.GetAWSOptions());
 
             services.AddScoped<IUserService, UserService>();
+            services.AddScoped<ISharedPredictionService, SharedPredictionService>();
             services.AddScoped<IPredictionService, PredictionService>();
 
             // Add authentication
@@ -89,6 +90,9 @@ namespace PredictionApi
             {
                 endpoints.MapControllers();
             });
+
+            // https://stackoverflow.com/questions/69961449/net6-and-datetime-problem-cannot-write-datetime-with-kind-utc-to-postgresql-ty
+            AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
         }
     }
 }

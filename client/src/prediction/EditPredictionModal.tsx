@@ -1,8 +1,11 @@
-import React, { useState, useCallback, useEffect } from "react";
+import React, { useState, useCallback, useEffect, useRef } from "react";
 import { Button, Modal, Form, Row, Col } from "react-bootstrap";
 import numeral from "numeral";
+import { toast } from "react-toastify";
 import { Prediction, defaultPrediction } from "../types";
 import { Today } from "../constants";
+import usePredictionDetail from "./usePredictionDetail";
+import SharedPredictionPanel from "./SharedPredictionPanel";
 
 // Modal that allows view/edit/delete Prediction
 
@@ -16,7 +19,7 @@ type Props = {
 // No operation for handling read-only inputs
 const noOp = () => {};
 
-const PredictionEditor = ({
+const EditPredictionModal = ({
   selPrediction,
   selectPrediction,
   updatePrediction,
@@ -25,6 +28,11 @@ const PredictionEditor = ({
   const [tmpPrediction, setTmpPrediction] = useState<Prediction>(
     defaultPrediction
   );
+  const shareLinkRef = useRef<HTMLInputElement>(null);
+
+  const predictionId = selPrediction?.id;
+
+  const predictionDetail = usePredictionDetail(predictionId);
 
   const closeModal = useCallback(() => {
     selectPrediction(null);
@@ -62,6 +70,19 @@ const PredictionEditor = ({
       deletePrediction(tmpPrediction);
     }
   }, [tmpPrediction, deletePrediction]);
+
+  const copyToClipboard = useCallback(
+    (e: any) => {
+      if (!shareLinkRef.current) {
+        return;
+      }
+      shareLinkRef.current.select();
+      navigator.clipboard.writeText(shareLinkRef.current.value);
+      e.target.focus();
+      toast.success("Share link copied to clipboard");
+    },
+    [shareLinkRef]
+  );
 
   // When prediction prop changes, reload tmpPrediction
   useEffect(() => {
@@ -153,6 +174,43 @@ const PredictionEditor = ({
               />
             </Col>
           </Form.Group>
+          <Form.Group as={Row} controlId="EditPredictionModalCanShare">
+            <Col sm={{ span: 10, offset: 2 }}>
+              <Form.Check
+                label="Allow sharing of this prediction"
+                name="canShare"
+                checked={tmpPrediction.canShare === true}
+                onChange={handleChange}
+                disabled
+              />
+            </Col>
+          </Form.Group>
+          {tmpPrediction.canShare && (
+            <Form.Group as={Row} controlId="EditPredictionModalShareLink">
+              <Form.Label column sm={2}>
+                Share Link
+              </Form.Label>
+              <Col sm={10}>
+                <div className="input-group mb-3">
+                  <div className="input-group-prepend">
+                    <Button
+                      onClick={copyToClipboard}
+                      title="Copy share link to clipboard"
+                    >
+                      <i className="fas fa-copy"></i>
+                    </Button>
+                  </div>
+                  <Form.Control
+                    ref={shareLinkRef}
+                    name="revisitOn"
+                    value={`${global.location.protocol}//${global.location.host}/share/${tmpPrediction.id}`}
+                    onChange={noOp}
+                    readOnly
+                  />
+                </div>
+              </Col>
+            </Form.Group>
+          )}
           <Form.Group as={Row} controlId="formHorizontalCheck">
             <Col sm={{ span: 10, offset: 2 }}>
               <Form.Check
@@ -165,6 +223,12 @@ const PredictionEditor = ({
             </Col>
           </Form.Group>
         </Form>
+        <hr />
+        <SharedPredictionPanel
+          isLoading={predictionDetail.isLoading}
+          sharedPredictions={predictionDetail.data?.sharedPredictions || []}
+        />
+        <hr />
         <Button variant="secondary" onClick={confirmDelete}>
           <i className="fas fa-trash" /> Delete
         </Button>
@@ -181,4 +245,4 @@ const PredictionEditor = ({
   );
 };
 
-export default PredictionEditor;
+export default EditPredictionModal;

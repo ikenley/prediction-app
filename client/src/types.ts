@@ -32,6 +32,8 @@ export type Prediction = {
   description: string;
   createdOn: Date;
   lastUpdated: Date;
+  canShare: boolean;
+  sharedPredictions: SharedPrediction[];
 };
 
 export const defaultPrediction: Prediction = {
@@ -44,4 +46,28 @@ export const defaultPrediction: Prediction = {
   description: "",
   createdOn: new Date(),
   lastUpdated: new Date(),
+  canShare: false,
+  sharedPredictions: [],
+};
+
+export type User = {
+  firstName: string;
+  lastName: string;
+  email: string;
+  created: Date;
+  lastAccessed: Date;
+};
+
+export type SharedPrediction = {
+  predictionId: string;
+  userId: string;
+  probability: number;
+  createdOn: Date;
+  lastUpdated: Date;
+  user: User;
+};
+
+export type CreateSharedPredictionRequest = {
+  predictionId: string;
+  probability: number;
 };
