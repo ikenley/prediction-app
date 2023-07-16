@@ -45,7 +45,7 @@ namespace PredictionApi.Models
             return p;
         }
 
-        public async Task<Prediction> GetByIdAsync(string userId, Guid id)
+        public async Task<Prediction> GetByIdAsync(string userId, Guid id, bool includeSharedPredictions)
         {
             var prediction = await this._dataContext.Predictions.FindAsync(id);
 
@@ -54,7 +54,7 @@ namespace PredictionApi.Models
                 throw new UnauthorizedAccessException("Unauthorized access to prediction");
             }
 
-            if (prediction.CanShare)
+            if (prediction.CanShare && includeSharedPredictions)
             {
                 prediction.SharedPredictions = await this._sharedPredictionService.GetByPredictionIdAsync(prediction.Id);
             }
@@ -75,7 +75,7 @@ namespace PredictionApi.Models
 
         public async Task<Prediction> UpdateAsync(string userId, Prediction prediction)
         {
-            var p = await GetByIdAsync(userId, prediction.Id);
+            var p = await GetByIdAsync(userId, prediction.Id, false);
 
             p.Name = prediction.Name;
             p.Probability = prediction.Probability;
@@ -91,7 +91,7 @@ namespace PredictionApi.Models
 
         public async Task DeleteAsync(string userId, Guid id)
         {
-            var prediction = await GetByIdAsync(userId, id);
+            var prediction = await GetByIdAsync(userId, id, false);
             this._dataContext.Predictions.Remove(prediction);
             await this._dataContext.SaveChangesAsync();
         }

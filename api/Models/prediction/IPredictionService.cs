@@ -9,7 +9,7 @@ namespace PredictionApi.Models
     {
         Task<Prediction> CreateAsync(string userId, Prediction prediction);
 
-        Task<Prediction> GetByIdAsync(string userId, Guid id);
+        Task<Prediction> GetByIdAsync(string userId, Guid id, bool includeSharedPredictions);
 
         Task<List<Prediction>> GetByUserIdAsync(string userId);
 
