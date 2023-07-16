@@ -34,7 +34,7 @@ namespace PredictionApi.Controllers
         public async Task<Prediction> GetByIdAsync(Guid id)
         {
             string userId = HttpContext.User.GetUserId();
-            var prediction = await _predictionService.GetByIdAsync(userId, id);
+            var prediction = await _predictionService.GetByIdAsync(userId, id, true);
             return prediction;
         }
 

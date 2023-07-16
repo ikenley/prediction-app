@@ -1,7 +1,5 @@
 import React, { useMemo } from "react";
-import classNames from "classnames";
 import Skeleton from "react-loading-skeleton";
-import { Button } from "react-bootstrap";
 import { Column } from "react-table";
 import DataGrid, { GridCell } from "../shared/grid/DataGrid";
 import { SharedPrediction } from "../types";
