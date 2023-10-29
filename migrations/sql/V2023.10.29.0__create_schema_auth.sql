@@ -37,8 +37,6 @@ create table auth.user (
 create table auth.oauth_state (
     id uuid not null,
     redirect_url varchar,
-    last_name varchar,
-    email varchar,
     started_at timestamp not null default now(),
     completed_at timestamp null,
     user_id uuid null,
