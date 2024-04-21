@@ -1,0 +1,49 @@
+version: 0.2
+
+env:
+  variables:
+    PLACEHOLDER_ENV_VAR: "TODO"
+  parameter-store:
+    DOCKER_USERNAME: /docker/username
+    DOCKER_PASSWORD: /docker/password
+
+phases:
+  install:
+    runtime-versions:
+      nodejs: 14
+  pre_build:
+    commands:
+      - echo Logging in to Amazon ECR...
+      - aws ecr get-login-password --region $AWS_DEFAULT_REGION | docker login --username AWS --password-stdin $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com
+      - echo Logging into DockerHub
+      - docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
+  build:
+    commands:
+      - echo Build started on `date`
+      - IMAGE_TAG=$BRANCH_NAME-$CODEBUILD_BUILD_NUMBER
+      - echo "IMAGE_TAG=$IMAGE_TAG"
+      - ASPNETCORE_ENVIRONMENT=$ENV
+      - echo "ASPNETCORE_ENVIRONMENT=$ASPNETCORE_ENVIRONMENT"
+      - echo "Building client Docker image..."
+      - cd client
+      - CLIENT_IMAGE_URI=$AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$CLIENT_IMAGE_REPO_NAME:$IMAGE_TAG
+      - echo CLIENT_IMAGE_URI=$CLIENT_IMAGE_URI
+      - docker build -t $CLIENT_IMAGE_REPO_NAME:$IMAGE_TAG --build-arg IMAGE_TAG=$IMAGE_TAG --build-arg BRANCH_NAME=$BRANCH_NAME .
+      - docker tag $CLIENT_IMAGE_REPO_NAME:$IMAGE_TAG $CLIENT_IMAGE_URI
+      - echo "Building API Docker image..."
+      - cd ../api
+      - API_IMAGE_URI=$AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$API_IMAGE_REPO_NAME:$IMAGE_TAG
+      - echo API_IMAGE_URI=$API_IMAGE_URI
+      - docker build -t $API_IMAGE_REPO_NAME:$IMAGE_TAG --build-arg IMAGE_TAG=$IMAGE_TAG --build-arg ASPNETCORE_ENVIRONMENT=$ASPNETCORE_ENVIRONMENT .
+      - docker tag $API_IMAGE_REPO_NAME:$IMAGE_TAG $API_IMAGE_URI
+  post_build:
+    commands:
+      - echo Build completed on `date`
+      - echo Pushing the Docker image...
+      - docker push $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$CLIENT_IMAGE_REPO_NAME:$IMAGE_TAG
+      - docker push $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$API_IMAGE_REPO_NAME:$IMAGE_TAG
+      - cd ..
+      - printf '[{"name":"%s","imageUri":"%s"},{"name":"%s","imageUri":"%s"}]' $CLIENT_IMAGE_REPO_NAME $CLIENT_IMAGE_URI $API_IMAGE_REPO_NAME $API_IMAGE_URI > imagedefinitions.json
+      - cat imagedefinitions.json
+artifacts:
+  files: imagedefinitions.json

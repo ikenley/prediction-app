@@ -1,23 +1,21 @@
-# https://hub.docker.com/_/microsoft-dotnet
+FROM public.ecr.aws/lambda/dotnet:6 as base
 FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build
-WORKDIR /source
-
-# copy csproj and restore as distinct layers
-COPY *.csproj ./
+WORKDIR /src
+COPY ["*.csproj", "./"]
 RUN dotnet restore
 
-# copy everything else and build app
-COPY . ./
-RUN dotnet publish -c release -o /app --no-restore
+WORKDIR "/src/prediction"
+COPY . .
+RUN dotnet build "PredictionApi.csproj" --configuration Release --output /app/build
 
-# final stage/image
-FROM mcr.microsoft.com/dotnet/aspnet:6.0
-WORKDIR /app
-COPY --from=build /app ./
-ARG ASPNETCORE_ENVIRONMENT
-ENV ASPNETCORE_ENVIRONMENT=$ASPNETCORE_ENVIRONMENT
-ARG IMAGE_TAG
-ENV TEMPLATE_APP_VERSION=$IMAGE_TAG
-ENV ASPNETCORE_URLS http://+:5000
-EXPOSE 5000
-ENTRYPOINT ["dotnet", "PredictionApi.dll"]
+FROM build AS publish
+RUN dotnet publish "PredictionApi.csproj" \
+    --configuration Release \ 
+    --runtime linux-x64 \
+    --self-contained false \ 
+    --output /app/publish \
+    -p:PublishReadyToRun=true  
+
+FROM base AS final
+WORKDIR /var/task
+COPY --from=publish /app/publish .
