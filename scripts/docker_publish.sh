@@ -9,3 +9,6 @@ docker build -t ik-test-prediction-lambda .
 
 docker tag ik-test-prediction-lambda:latest 924586450630.dkr.ecr.us-east-1.amazonaws.com/ik-test-prediction-lambda:${TAG}
 docker push 924586450630.dkr.ecr.us-east-1.amazonaws.com/ik-test-prediction-lambda:${TAG}
+
+echo "Updating Lambda function code"
+aws lambda update-function-code --no-paginate --function-name ik-test-prediction-lambda --image-uri 924586450630.dkr.ecr.us-east-1.amazonaws.com/ik-test-prediction-lambda:${TAG}
