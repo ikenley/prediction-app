@@ -20,7 +20,7 @@ phases:
       - docker build -t $LAMBDA_REPOSITORY_NAME:$IMAGE_TAG -f Dockerfile --build-arg APP_VERSION=$IMAGE_TAG .
       - docker tag $LAMBDA_REPOSITORY_NAME:$IMAGE_TAG $LAMBDA_IMAGE_URI
       - echo "Building front-end..."
-      - cd "$CWD/frontend"
+      - cd "$CWD/client"
       - REACT_APP_VERSION=$IMAGE_TAG
       - echo "REACT_APP_VERSION=$REACT_APP_VERSION"
       - npm ci
