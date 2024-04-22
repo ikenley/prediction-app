@@ -69,8 +69,7 @@ namespace PredictionApi
                 options.AddDefaultPolicy(
                     policy =>
                     {
-                        policy.WithOrigins("https://*.ikenley.com")
-                            .SetIsOriginAllowedToAllowWildcardSubdomains()
+                        policy.SetIsOriginAllowed(IsOriginAllowed)
                             .AllowAnyHeader()
                             .AllowAnyMethod()
                             .AllowCredentials();
@@ -81,6 +80,23 @@ namespace PredictionApi
             services.AddMemoryCache();
         }
 
+        /// <summary>
+        /// Check for wildcard subdomain
+        /// https://stackoverflow.com/questions/60608915/net-core-configure-cors-to-allow-all-subdomains-and-all-localhost-ports-at-the
+        /// </summary>
+        /// <param name="origin"></param>
+        /// <returns></returns>
+        private static bool IsOriginAllowed(string origin)
+        {
+            var uri = new Uri(origin);
+            var env = System.Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") ?? "n/a";
+
+            var isAllowed = uri.Host.Equals("ikenley.com", StringComparison.OrdinalIgnoreCase)
+                            || uri.Host.EndsWith(".ikenley.com", StringComparison.OrdinalIgnoreCase);
+
+            return isAllowed;
+        }
+
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
@@ -88,8 +104,6 @@ namespace PredictionApi
             {
                 app.UseDeveloperExceptionPage();
             }
-
-
 
             app.UseSerilogRequestLogging();
             app.UseMiddleware<LogVersionMiddleware>();
