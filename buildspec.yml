@@ -17,13 +17,8 @@ phases:
       - cd api
       - LAMBDA_IMAGE_URI="$LAMBDA_REPOSITORY_URL:$IMAGE_TAG"
       - echo LAMBDA_IMAGE_URI=$LAMBDA_IMAGE_URI
-      - docker build -t $LAMBDA_REPOSITORY_NAME:$IMAGE_TAG -f Dockerfile-lambda --build-arg APP_VERSION=$IMAGE_TAG .
+      - docker build -t $LAMBDA_REPOSITORY_NAME:$IMAGE_TAG -f Dockerfile --build-arg APP_VERSION=$IMAGE_TAG .
       - docker tag $LAMBDA_REPOSITORY_NAME:$IMAGE_TAG $LAMBDA_IMAGE_URI
-      - echo "Building REST API Docker image..."
-      - API_IMAGE_URI="$API_REPOSITORY_URL:$IMAGE_TAG"
-      - echo API_IMAGE_URI=$API_IMAGE_URI
-      - docker build -t $API_REPOSITORY_NAME:$IMAGE_TAG -f Dockerfile-api --build-arg APP_VERSION=$IMAGE_TAG .
-      - docker tag $API_REPOSITORY_NAME:$IMAGE_TAG $API_IMAGE_URI
       - echo "Building front-end..."
       - cd "$CWD/frontend"
       - REACT_APP_VERSION=$IMAGE_TAG
@@ -36,10 +31,8 @@ phases:
       - echo "Deploying the API layer lambda function"
       - echo Pushing the Docker image...
       - docker push $LAMBDA_REPOSITORY_URL:$IMAGE_TAG
-      - docker push $API_REPOSITORY_URL:$IMAGE_TAG
       - echo "Updating lambda function image_uri..."
       - aws lambda update-function-code --no-paginate --function-name $API_FUNCTION_NAME --image-uri $LAMBDA_IMAGE_URI
-      - aws lambda update-function-code --no-paginate --function-name $JOB_RUNNER_FUNCTION_NAME --image-uri $LAMBDA_IMAGE_URI
       - echo "Deploying the frontend static S3 site..."
       - aws s3 rm s3://${SITE_S3_BUCKET_NAME}/${SITE_S3_KEY_PREFIX} --recursive
       - aws s3 cp ./build/ s3://${SITE_S3_BUCKET_NAME}/${SITE_S3_KEY_PREFIX} --recursive
