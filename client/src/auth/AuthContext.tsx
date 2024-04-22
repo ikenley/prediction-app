@@ -8,6 +8,7 @@ import React, {
 } from "react";
 import axios from "axios";
 import { GoogleLoginResponse } from "react-google-login";
+import config from "../config";
 
 export type AuthState = {
   hasLoaded: boolean;
@@ -75,7 +76,7 @@ export const AuthContextProvider = ({ children }: any) => {
     }
 
     axios
-      .get("/api/main/authorization")
+      .get(`${config.apiPrefix}/main/authorization`)
       .then((res) => {
         setIsAuthorized(true);
       })
