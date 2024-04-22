@@ -35,11 +35,11 @@ public class LambdaEntryPoint :
     /// <param name="builder">The IWebHostBuilder to configure.</param>
     protected override void Init(IWebHostBuilder builder)
     {
-        var paramName = "/ik/dev/prediction/prediction_app_user/connection_string";
+        var connectionStringParamName = Environment.GetEnvironmentVariable("CONNECTION_STRING_SSM_PARAM_NAME");
         // Get sensitive variables from SSM Parameters
         var ssmClient = new Amazon.SimpleSystemsManagement.AmazonSimpleSystemsManagementClient();
         var ssmParamLoader = new SsmParamLoader(ssmClient);
-        ssmParamLoader.LoadToEnv(paramName, "CONNECTION_STRING").GetAwaiter().GetResult();
+        ssmParamLoader.LoadToEnv(connectionStringParamName, "CONNECTION_STRING").GetAwaiter().GetResult();
 
         var connectionString = Environment.GetEnvironmentVariable("CONNECTION_STRING");
         Console.WriteLine($"connectionString={connectionString}");

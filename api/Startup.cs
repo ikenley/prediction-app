@@ -70,7 +70,10 @@ namespace PredictionApi
                     policy =>
                     {
                         policy.WithOrigins("https://*.ikenley.com")
-                            .SetIsOriginAllowedToAllowWildcardSubdomains();
+                            .SetIsOriginAllowedToAllowWildcardSubdomains()
+                            .AllowAnyHeader()
+                            .AllowAnyMethod()
+                            .AllowCredentials();
                     });
             });
 
