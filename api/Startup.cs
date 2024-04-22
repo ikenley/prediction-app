@@ -63,6 +63,17 @@ namespace PredictionApi
                 options.SecurityTokenValidators.Add(new GoogleTokenValidator());
             });
 
+            // TODO set via env vars
+            services.AddCors(options =>
+            {
+                options.AddDefaultPolicy(
+                    policy =>
+                    {
+                        policy.WithOrigins("https://*.ikenley.com")
+                            .SetIsOriginAllowedToAllowWildcardSubdomains();
+                    });
+            });
+
             services.AddControllers();
             services.AddMemoryCache();
         }
@@ -75,6 +86,8 @@ namespace PredictionApi
                 app.UseDeveloperExceptionPage();
             }
 
+
+
             app.UseSerilogRequestLogging();
             app.UseMiddleware<LogVersionMiddleware>();
             app.UseMiddleware<LogUserIdMiddleware>();
@@ -82,6 +95,8 @@ namespace PredictionApi
             //app.UseHttpsRedirection();
 
             app.UseRouting();
+
+            app.UseCors();
 
             app.UseAuthentication();
             app.UseAuthorization();
