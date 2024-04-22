@@ -89,8 +89,8 @@ namespace PredictionApi
         private static bool IsOriginAllowed(string origin)
         {
             var uri = new Uri(origin);
-            var env = System.Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") ?? "n/a";
 
+            // TODO conver to env variable, enable localhost in dev mode
             var isAllowed = uri.Host.Equals("ikenley.com", StringComparison.OrdinalIgnoreCase)
                             || uri.Host.EndsWith(".ikenley.com", StringComparison.OrdinalIgnoreCase);
 
