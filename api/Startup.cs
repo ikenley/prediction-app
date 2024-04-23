@@ -63,7 +63,6 @@ namespace PredictionApi
                 options.SecurityTokenValidators.Add(new GoogleTokenValidator());
             });
 
-            // TODO set via env vars
             services.AddCors(options =>
             {
                 options.AddDefaultPolicy(
@@ -91,6 +90,7 @@ namespace PredictionApi
             var uri = new Uri(origin);
 
             // TODO conver to env variable, enable localhost in dev mode
+            Console.WriteLine($"uri.Host={uri.Host}");
             var isAllowed = uri.Host.Equals("ikenley.com", StringComparison.OrdinalIgnoreCase)
                             || uri.Host.EndsWith(".ikenley.com", StringComparison.OrdinalIgnoreCase);
 
