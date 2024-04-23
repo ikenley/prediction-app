@@ -33,7 +33,7 @@ namespace PredictionApi
             // Fetch connection string
             // Name will be main-connection-string or main-connection-string-local
             // string connectionStringName = Configuration["main-connection-string-name"];
-            string connectionString = Configuration.GetConnectionString("main");
+            string connectionString = Environment.GetEnvironmentVariable("CONNECTION_STRING");
             services.AddDbContext<DataContext>(options =>
                 options.UseNpgsql(connectionString)
                     .UseSnakeCaseNamingConvention()
@@ -63,8 +63,37 @@ namespace PredictionApi
                 options.SecurityTokenValidators.Add(new GoogleTokenValidator());
             });
 
+            services.AddCors(options =>
+            {
+                options.AddDefaultPolicy(
+                    policy =>
+                    {
+                        policy.SetIsOriginAllowed(IsOriginAllowed)
+                            .AllowAnyHeader()
+                            .AllowAnyMethod()
+                            .AllowCredentials();
+                    });
+            });
+
             services.AddControllers();
             services.AddMemoryCache();
+        }
+
+        /// <summary>
+        /// Check for wildcard subdomain
+        /// https://stackoverflow.com/questions/60608915/net-core-configure-cors-to-allow-all-subdomains-and-all-localhost-ports-at-the
+        /// </summary>
+        /// <param name="origin"></param>
+        /// <returns></returns>
+        private static bool IsOriginAllowed(string origin)
+        {
+            var uri = new Uri(origin);
+
+            // TODO conver to env variable, enable localhost in dev mode
+            var isAllowed = uri.Host.Equals("ikenley.com", StringComparison.OrdinalIgnoreCase)
+                            || uri.Host.EndsWith(".ikenley.com", StringComparison.OrdinalIgnoreCase);
+
+            return isAllowed;
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -82,6 +111,8 @@ namespace PredictionApi
             //app.UseHttpsRedirection();
 
             app.UseRouting();
+
+            app.UseCors();
 
             app.UseAuthentication();
             app.UseAuthorization();

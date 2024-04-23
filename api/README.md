@@ -20,7 +20,7 @@ dotnet run
 - [Dockerfile based on](https://docs.docker.com/engine/examples/dotnetcore/)
 
 ```
-docker build -t prediction-api --build-arg ASPNETCORE_ENVIRONMENT=Development .
+docker build -t prediction-lambda .
 docker run --rm -it -p 5000:5000 prediction-api
 ```
 

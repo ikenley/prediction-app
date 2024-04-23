@@ -2,6 +2,7 @@ import { useContext } from "react";
 import axios from "axios";
 import { useQuery } from "react-query";
 import { Prediction } from "../types";
+import config from "../config";
 import { QueryKey } from "../constants";
 import { AuthContext } from "../auth/AuthContext";
 
@@ -12,7 +13,9 @@ const usePredictionDetail = (predictionId: string | undefined) => {
   const predictionDetail = useQuery<Prediction>(
     [QueryKey.prediction, predictionId],
     async () => {
-      const res = await axios.get(`/api/prediction/by-id/${predictionId}`);
+      const res = await axios.get(
+        `${config.apiPrefix}/prediction/by-id/${predictionId}`
+      );
       return res.data;
     },
     { enabled: predictionId !== undefined && isAuthorized }

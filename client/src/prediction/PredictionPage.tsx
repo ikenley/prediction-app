@@ -6,6 +6,7 @@ import { Tabs, Tab, Alert } from "react-bootstrap";
 import Skeleton from "react-loading-skeleton";
 import { toast } from "react-toastify";
 import { Prediction, CreateSharedPredictionRequest } from "../types";
+import config from "../config";
 import { QueryKey } from "../constants";
 import Navbar from "../shared/Navbar";
 import { AuthContext } from "../auth/AuthContext";
@@ -32,7 +33,7 @@ const PredictionPage = () => {
   }, [setShowSharedModal]);
   const sharedMutation = useMutation(
     (req: CreateSharedPredictionRequest) => {
-      return axios.post("/api/shared-prediction", req);
+      return axios.post(`${config.apiPrefix}/shared-prediction`, req);
     },
     {
       onSuccess: () => {
@@ -58,7 +59,10 @@ const PredictionPage = () => {
 
   const createPrediction = useCallback(
     async (prediction: Prediction) => {
-      const res = await axios.post("/api/prediction/create", prediction);
+      const res = await axios.post(
+        `${config.apiPrefix}/prediction/create`,
+        prediction
+      );
 
       const newPrediction = res.data;
       const nextPredictions = [...(predictions || []), newPrediction];
@@ -79,7 +83,10 @@ const PredictionPage = () => {
 
   const updatePrediction = useCallback(
     async (prediction: Prediction) => {
-      const res = await axios.post("/api/prediction/update", prediction);
+      const res = await axios.post(
+        `${config.apiPrefix}/prediction/update`,
+        prediction
+      );
 
       const nextPredictions = [...(predictions || [])];
       const ix = nextPredictions.findIndex((p) => p.id === prediction.id);
@@ -93,7 +100,7 @@ const PredictionPage = () => {
     async (prediction: Prediction) => {
       setSelPrediction(null);
 
-      await axios.delete(`/api/prediction/${prediction.id}`);
+      await axios.delete(`${config.apiPrefix}/prediction/${prediction.id}`);
 
       if (predictions) {
         const nextPredictions = predictions.filter(
@@ -116,7 +123,7 @@ const PredictionPage = () => {
       return;
     }
 
-    axios.get("/api/prediction/by-user").then((res) => {
+    axios.get(`${config.apiPrefix}/prediction/by-user`).then((res) => {
       setPredictions(res.data);
     });
   }, [hasLoaded, isAuthorized, setPredictions]);
