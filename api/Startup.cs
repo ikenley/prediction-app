@@ -93,6 +93,8 @@ namespace PredictionApi
             Console.WriteLine($"uri.Host={uri.Host}");
             var isAllowed = uri.Host.Equals("ikenley.com", StringComparison.OrdinalIgnoreCase)
                             || uri.Host.EndsWith(".ikenley.com", StringComparison.OrdinalIgnoreCase);
+            
+            Console.WriteLine($"isAllowed={isAllowed}");
 
             return isAllowed;
         }
