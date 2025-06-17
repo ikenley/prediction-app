@@ -1,5 +1,5 @@
-FROM public.ecr.aws/lambda/dotnet:6 as base
-FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build
+FROM public.ecr.aws/lambda/dotnet:8 as base
+FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 WORKDIR /src
 COPY ["*.csproj", "./"]
 RUN dotnet restore
