@@ -207,7 +207,7 @@ const DataGrid = ({
   return (
     <div className="data-grid table-responsive">
       <AutoSizer disableHeight>
-        {({ width }) => (
+        {({ width }: any) => (
           <div
             style={{
               width: `${width}px`,

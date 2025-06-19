@@ -1,7 +1,3 @@
-/* Bootstrap overrides */
-$blue: #007bff;
-$primary: $blue;
-
 /* Top-level styles */
 html {
   position: relative;
@@ -84,19 +80,6 @@ html {
   background-color: #fff;
 }
 
-/* Tabs */
-// .app .nav-tabs .nav-item.show .nav-link,
-// .app .nav-tabs .nav-link.active {
-//   color: #fff;
-// }
-
-// .app .nav-tabs .nav-item.show .nav-link,
-// .app .nav-tabs .nav-link.active {
-//   color: #fff;
-//   background-color: $primary;
-//   border-color: #dee2e6 #dee2e6 $primary;
-// }
-
 /* modal */
 @media (min-width: 992px) {
   .app .modal-lg,
@@ -105,19 +88,9 @@ html {
   }
 }
 
-// $body-bg: #00355f;
-
-$tooltip-max-width: 300px;
-
 @media (min-width: 1440px) {
   .app .container-xxl {
     max-width: 1400px;
   }
 }
 
-$enable-rounded: false;
-
-/* import bootstrap to set changes */
-@import "~bootstrap/scss/bootstrap";
-
-@import "/src/shared/grid/tables.scss";
