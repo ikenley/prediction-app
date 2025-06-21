@@ -11,10 +11,13 @@ const NavbarMain = () => {
   const { isLoggedIn } = authContext;
 
   return (
-    <Navbar bg="dark" variant="dark" expand="lg">
+    <Navbar bg="dark" variant="dark" expand="lg" className="px-3">
       <Navbar.Brand href="/">Prediction App</Navbar.Brand>
       <Navbar.Toggle aria-controls="basic-navbar-nav" />
-      <Navbar.Collapse id="basic-navbar-nav">
+      <Navbar.Collapse
+        id="basic-navbar-nav"
+        className="d-flex justify-content-between"
+      >
         <Nav className="mr-auto nav-links">
           <NavLink
             className="nav-link"
@@ -28,7 +31,7 @@ const NavbarMain = () => {
             About
           </NavLink>
         </Nav>
-        <Nav className="ml-auto">
+        <Nav className="d-flex justify-content-end">
           <NavItem className={classNames({ "d-none": isLoggedIn })}>
             <LoginButton />
           </NavItem>

@@ -32,8 +32,8 @@ namespace PredictionApi
         {
             // Fetch connection string
             // Name will be main-connection-string or main-connection-string-local
-            string connectionString = Configuration["ConnectionStrings:main"];
-            //string connectionString = Environment.GetEnvironmentVariable("CONNECTION_STRING");
+            //string connectionString = Configuration["ConnectionStrings:main"];
+            string connectionString = Environment.GetEnvironmentVariable("CONNECTION_STRING");
             services.AddDbContext<DataContext>(options =>
                 options.UseNpgsql(connectionString)
                     .UseSnakeCaseNamingConvention()

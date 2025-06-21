@@ -54,7 +54,7 @@ const CreatePredictionModal = ({ createPrediction }: Props) => {
       </Button>
 
       <Modal show={showModal} onHide={closeModal} size="lg" backdrop="static">
-        <Modal.Header closeButton>
+        <Modal.Header>
           <Modal.Title>Create Prediction</Modal.Title>
         </Modal.Header>
         <Modal.Body>

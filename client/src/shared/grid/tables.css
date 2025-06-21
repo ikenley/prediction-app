@@ -1,140 +1,42 @@
-/* 
 .table {
-  width: 100%;
-  margin-bottom: $spacer;
-  color: $table-color;
-  background-color: $table-bg;
-
-  .th,
-  .td {
-    padding: $table-cell-padding;
-    vertical-align: top;
-    border-top: $table-border-width solid $table-border-color;
-  }
-
-  .thead .th {
-    vertical-align: bottom;
-    border-bottom: (2 * $table-border-width) solid $table-border-color;
-    font-weight: bold;
-  }
-
-  .tbody + .tbody {
-    border-top: (2 * $table-border-width) solid $table-border-color;
-  }
+	 width: 100%;
+	 margin-bottom: 1rem;
+	 color: #000;
+	 background-color: #fff;
 }
-
-.table-sm {
-  .th,
-  .td {
-    padding: $table-cell-padding-sm;
-  }
+ .table .th, .table .td {
+	 padding: 0.5rem;
+	 vertical-align: top;
+	 border-top: 1px solid #dee2e6;
 }
-
-
-.table-bordered {
-  border: $table-border-width solid $table-border-color;
-
-  .th,
-  .td {
-    border: $table-border-width solid $table-border-color;
-  }
-
-  .thead {
-    .th,
-    .td {
-      border-bottom-width: 2 * $table-border-width;
-    }
-  }
+ .table .thead .th {
+	 vertical-align: bottom;
+	 border-bottom: 2px solid #dee2e6;
+	 font-weight: bold;
 }
-
-.table-borderless {
-  .th,
-  .td,
-  .thead .th,
-  .tbody + .tbody {
-    border: 0;
-  }
+ .table .tbody + .tbody {
+	 border-top: 2px solid #dee2e6;
 }
-
-.table-striped {
-  .tbody .tr:nth-of-type(#{$table-striped-order}) {
-    background-color: $table-accent-bg;
-  }
+ .table-sm .th, .table-sm .td {
+	 padding: 0.25rem;
 }
-
-.table-hover {
-  .tbody .tr {
-    @include hover() {
-      color: $table-hover-color;
-      background-color: $table-hover-bg;
-    }
-  }
+ .table-bordered {
+	 border: 1px solid #dee2e6;
 }
-.table {
-  .thead-dark {
-    .th {
-      color: $table-dark-color;
-      background-color: $table-dark-bg;
-      border-color: $table-dark-border-color;
-    }
-  }
-
-  .thead-light {
-    .th {
-      color: $table-head-color;
-      background-color: $table-head-bg;
-      border-color: $table-border-color;
-    }
-  }
+ .table-bordered .th, .table-bordered .td {
+	 border: 1px solid #dee2e6;
 }
-
-.table-dark {
-  color: $table-dark-color;
-  background-color: $table-dark-bg;
-
-  .th,
-  .td,
-  .thead .th {
-    border-color: $table-dark-border-color;
-  }
-
-  &.table-bordered {
-    border: 0;
-  }
-
-  &.table-striped {
-    .tbody .tr:nth-of-type(#{$table-striped-order}) {
-      background-color: $table-dark-accent-bg;
-    }
-  }
-
-  &.table-hover {
-    .tbody .tr {
-      @include hover() {
-        color: $table-dark-hover-color;
-        background-color: $table-dark-hover-bg;
-      }
-    }
-  }
+ .table-bordered .thead .th, .table-bordered .thead .td {
+	 border-bottom-width: 2px;
 }
-
-/* .table-responsive {
-  @each $breakpoint in map-keys($grid-breakpoints) {
-    $next: breakpoint-next($breakpoint, $grid-breakpoints);
-    $infix: breakpoint-infix($next, $grid-breakpoints);
-
-    &#{$infix} {
-      @include media-breakpoint-down($breakpoint) {
-        display: block;
-        width: 100%;
-        overflow-x: auto;
-        -webkit-overflow-scrolling: touch;
-
-        // Prevent double border on horizontal scroll due to use of `display: block;`
-        > .table-bordered {
-          border: 0;
-        }
-      }
-    }
-  }
-} */ 
+ .table-borderless .th, .table-borderless .td, .table-borderless .thead .th, .table-borderless .tbody + .tbody {
+	 border: 0;
+}
+ .table-striped .tbody .tr:nth-of-type(odd) {
+	 background-color: transparent;
+}
+ .table-hover .tbody .tr {
+	 color: #000;
+	 background-color: #fff;
+}
+ 
