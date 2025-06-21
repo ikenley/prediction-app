@@ -9,7 +9,7 @@ const devHost = "https://predictions.ikenley.com";
 const prodHost = "https://predictions.ikenley.com";
 const remoteHost = isProd ? prodHost : devHost;
 
-const apiTarget = debugApi ? "http://localhost:5000" : remoteHost;
+const apiTarget = debugApi ? "http://localhost:8000" : remoteHost;
 
 module.exports = function (app) {
   app.use(
