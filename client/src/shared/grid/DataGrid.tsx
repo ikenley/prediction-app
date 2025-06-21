@@ -205,7 +205,7 @@ const DataGrid = ({
   handleRowClick,
 }: DataGridProps) => {
   return (
-    <div className="data-grid table-responsive">
+    <div className="data-grid ">
       <AutoSizer disableHeight>
         {({ width }: any) => (
           <div

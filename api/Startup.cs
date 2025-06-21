@@ -32,7 +32,7 @@ namespace PredictionApi
         {
             // Fetch connection string
             // Name will be main-connection-string or main-connection-string-local
-            // string connectionStringName = Configuration["main-connection-string-name"];
+            //string connectionString = Configuration["ConnectionStrings:main"];
             string connectionString = Environment.GetEnvironmentVariable("CONNECTION_STRING");
             services.AddDbContext<DataContext>(options =>
                 options.UseNpgsql(connectionString)
@@ -58,6 +58,7 @@ namespace PredictionApi
             })
             .AddJwtBearer(options =>
             {
+                options.UseSecurityTokenValidators = true;
                 options.Audience = clientId;
                 options.SecurityTokenValidators.Clear();
                 options.SecurityTokenValidators.Add(new GoogleTokenValidator());
