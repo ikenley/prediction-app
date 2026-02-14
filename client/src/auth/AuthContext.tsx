@@ -4,106 +4,126 @@ import React, {
   useMemo,
   useCallback,
   useEffect,
-  useRef,
+  useContext,
 } from "react";
 import axios from "axios";
-import { GoogleLoginResponse } from "react-google-login";
 import config from "../config";
+import useInterval from "../hooks/useInterval";
+import User from "./User";
+import redirectToLogin from "./redirectToLogin";
+
+const REFRESH_TOKEN_TIMEOUT = 1740000; // 29 minutes
 
 export type AuthState = {
   hasLoaded: boolean;
   isLoggedIn: boolean;
-  userId: string;
+  isAuthenticated: boolean;
   isAuthorized: boolean;
-  handleLogin: (responseGoogle: any) => void;
-  handleLogout: () => void;
-  onAutoLoadFinished: (successLogin: boolean) => void;
+  user: User | null;
+  userId: string;
+  login: () => void;
+  logout: () => void;
 };
 
 const defaultAuthState: AuthState = {
   hasLoaded: false,
   isLoggedIn: false,
-  userId: "",
+  isAuthenticated: false,
   isAuthorized: false,
-  handleLogin: () => {},
-  handleLogout: () => {},
-  onAutoLoadFinished: (successLogin: boolean) => {},
+  user: null,
+  userId: "",
+  login: () => {},
+  logout: () => {},
 };
 
 export const AuthContext = createContext(defaultAuthState);
 
+export const useAuthContext = () => {
+  return useContext(AuthContext);
+};
+
 export const AuthContextProvider = ({ children }: any) => {
-  const [isAuthorized, setIsAuthorized] = useState<boolean | null>(null);
-  const [
-    loginResponse,
-    setLoginResponse,
-  ] = useState<GoogleLoginResponse | null>(null);
-  const hasLoadedOnce = useRef<boolean>(false);
+  const [isLoading, setIsLoading] = useState(true);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [user, setUser] = useState<User | null>(null);
 
-  const handleLogin = useCallback(
-    (response: GoogleLoginResponse) => {
-      axios.defaults.headers.common[
-        "Authorization"
-      ] = `bearer ${response.tokenId}`;
+  /** Refresh the auth token from auth-service */
+  const refreshToken = useCallback(async () => {
+    try {
+      const response = await axios.post(
+        `${config.authApiPrefix}/refresh`,
+        {},
+        {
+          withCredentials: true,
+          transformRequest: (data: any, headers: any) => {
+            delete headers["Authorization"];
+            return data;
+          },
+        }
+      );
+      const idToken = response.data as string;
 
-      setLoginResponse(response);
-    },
-    [setLoginResponse]
-  );
+      // Set authorization header for all future requests
+      axios.defaults.headers.common["Authorization"] = `bearer ${idToken}`;
 
-  const handleLogout = useCallback(() => {
-    setLoginResponse(null);
-  }, [setLoginResponse]);
-
-  const onAutoLoadFinished = useCallback(
-    (successLogin: boolean) => {
-      if (!successLogin) {
-        setIsAuthorized(false);
-      }
-    },
-    [setIsAuthorized]
-  );
-
-  // Upon login check api authorization
-  useEffect(() => {
-    if (!loginResponse) {
-      if (hasLoadedOnce.current) {
-        setIsAuthorized(false);
-      } else {
-        hasLoadedOnce.current = true;
-      }
-      return;
+      const newUser = User.fromIdToken(idToken);
+      setUser(newUser);
+      setIsAuthenticated(true);
+    } catch {
+      setIsAuthenticated(false);
+      setUser(null);
+    } finally {
+      setIsLoading(false);
     }
+  }, []);
 
-    axios
-      .get(`${config.apiPrefix}/main/authorization`)
-      .then((res) => {
-        setIsAuthorized(true);
-      })
-      .catch((res) => {
-        setIsAuthorized(false);
-      });
-  }, [loginResponse, setIsAuthorized]);
+  // On mount, attempt to refresh token
+  useEffect(() => {
+    refreshToken();
+  }, [refreshToken]);
 
-  const AuthState = useMemo(() => {
-    return {
-      hasLoaded: isAuthorized !== null,
-      isLoggedIn: loginResponse !== null,
-      userId: loginResponse?.googleId || "",
-      isAuthorized: isAuthorized === true,
-      handleLogin,
-      handleLogout,
-      onAutoLoadFinished,
+  // Refresh token at regular interval
+  useInterval(refreshToken, REFRESH_TOKEN_TIMEOUT);
+
+  // Set up 401 interceptor
+  useEffect(() => {
+    const interceptor = axios.interceptors.response.use(
+      (res) => res,
+      (err) => {
+        if (err.response?.status === 401) {
+          redirectToLogin();
+        }
+        return Promise.reject(err);
+      }
+    );
+
+    return () => {
+      axios.interceptors.response.eject(interceptor);
     };
-  }, [
-    loginResponse,
-    isAuthorized,
-    handleLogin,
-    handleLogout,
-    onAutoLoadFinished,
-  ]);
+  }, []);
+
+  const login = useCallback(() => {
+    redirectToLogin();
+  }, []);
+
+  const logout = useCallback(() => {
+    global.location.href = `${config.authApiPrefix}/logout`;
+  }, []);
+
+  const authValue = useMemo(() => {
+    return {
+      hasLoaded: !isLoading,
+      isLoggedIn: isAuthenticated,
+      isAuthenticated,
+      isAuthorized: isAuthenticated,
+      user,
+      userId: user?.id || "",
+      login,
+      logout,
+    };
+  }, [isLoading, isAuthenticated, user, login, logout]);
 
   return (
-    <AuthContext.Provider value={AuthState}>{children}</AuthContext.Provider>
+    <AuthContext.Provider value={authValue}>{children}</AuthContext.Provider>
   );
 };

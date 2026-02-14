@@ -1,4 +1,4 @@
-# PredictionApi
+`# PredictionApi
 
 Sample .NET Core API to be hosted in a Docker container
 
@@ -8,7 +8,7 @@ Sample .NET Core API to be hosted in a Docker container
 
 ```
 cd api
-dotnet build
+dotnet builds
 dotnet run
 ```
 
@@ -31,7 +31,6 @@ docker run --rm -it -p 5000:5000 prediction-api
 - [Create a web API with ASP.NET Core](https://docs.microsoft.com/en-us/aspnet/core/tutorials/first-web-api?view=aspnetcore-5.0&tabs=visual-studio-code)
 - [Entity Framework Core Migrations](https://docs.microsoft.com/en-us/ef/core/managing-schemas/migrations/?tabs=dotnet-core-cli)
 - [Configuration in ASP.NET Core](https://docs.microsoft.com/en-us/aspnet/core/fundamentals/configuration/?view=aspnetcore-5.0)
-
 ```
 # Create a migration and apply it to DB
 dotnet ef migrations add InitialCreate
