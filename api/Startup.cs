@@ -37,8 +37,6 @@ namespace PredictionApi
             Env.Load(); 
 
             // Fetch connection string
-            // Name will be main-connection-string or main-connection-string-local
-            //string connectionString = Configuration["ConnectionStrings:main"];
             string connectionString = Environment.GetEnvironmentVariable("CONNECTION_STRING");
             services.AddDbContext<DataContext>(options =>
                 options.UseNpgsql(connectionString)
@@ -58,6 +56,9 @@ namespace PredictionApi
 
             string cognitoUserPoolId = Environment.GetEnvironmentVariable("COGNITO_USER_POOL_ID");
             string cognitoClientId = Environment.GetEnvironmentVariable("COGNITO_CLIENT_ID");
+
+            Console.WriteLine($"cognitoUserPoolId={cognitoUserPoolId}");
+            Console.WriteLine($"cognitoClientId={cognitoClientId}");
             string cognitoRegion = Environment.GetEnvironmentVariable("AWS_REGION") ?? "us-east-1";
             string cognitoIssuer = $"https://cognito-idp.{cognitoRegion}.amazonaws.com/{cognitoUserPoolId}";
 
