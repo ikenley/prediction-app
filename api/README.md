@@ -1,4 +1,4 @@
-`# PredictionApi
+# PredictionApi
 
 Sample .NET Core API to be hosted in a Docker container
 
