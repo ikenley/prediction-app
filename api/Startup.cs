@@ -17,6 +17,7 @@ using PredictionApi.Models;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using System.IdentityModel.Tokens.Jwt;
 using Microsoft.IdentityModel.Tokens;
+using DotNetEnv;
 
 namespace PredictionApi
 {
@@ -32,6 +33,9 @@ namespace PredictionApi
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            // Load the .env file
+            Env.Load(); 
+
             // Fetch connection string
             // Name will be main-connection-string or main-connection-string-local
             //string connectionString = Configuration["ConnectionStrings:main"];
@@ -65,6 +69,7 @@ namespace PredictionApi
             })
             .AddJwtBearer(options =>
             {
+                options.MapInboundClaims = false;
                 options.Authority = cognitoIssuer;
                 options.TokenValidationParameters = new TokenValidationParameters
                 {

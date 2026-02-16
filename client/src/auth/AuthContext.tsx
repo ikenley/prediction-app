@@ -70,8 +70,7 @@ export const AuthContextProvider = ({ children }: any) => {
       setUser(newUser);
       setIsAuthenticated(true);
     } catch {
-      setIsAuthenticated(false);
-      setUser(null);
+      redirectToLogin();
     } finally {
       setIsLoading(false);
     }
