@@ -27,6 +27,8 @@ namespace PredictionApi.Models
 
         public async Task<Prediction> CreateAsync(string userId, Prediction prediction)
         {
+            Console.WriteLine($"Creating prediction for userId={userId}");
+
             var p = new Prediction();
             p.Id = Guid.NewGuid();
             p.UserId = userId;

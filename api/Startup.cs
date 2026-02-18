@@ -15,6 +15,9 @@ using Serilog;
 using PredictionApi.Middleware;
 using PredictionApi.Models;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using System.IdentityModel.Tokens.Jwt;
+using Microsoft.IdentityModel.Tokens;
+using DotNetEnv;
 
 namespace PredictionApi
 {
@@ -30,9 +33,10 @@ namespace PredictionApi
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            // Load the .env file
+            Env.Load(); 
+
             // Fetch connection string
-            // Name will be main-connection-string or main-connection-string-local
-            //string connectionString = Configuration["ConnectionStrings:main"];
             string connectionString = Environment.GetEnvironmentVariable("CONNECTION_STRING");
             services.AddDbContext<DataContext>(options =>
                 options.UseNpgsql(connectionString)
@@ -48,20 +52,34 @@ namespace PredictionApi
             services.AddScoped<IPredictionService, PredictionService>();
 
             // Add authentication
-            string clientId = Configuration["auth:client-id"];
+            JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
+
+            string cognitoUserPoolId = Environment.GetEnvironmentVariable("COGNITO_USER_POOL_ID");
+            string cognitoClientId = Environment.GetEnvironmentVariable("COGNITO_CLIENT_ID");
+
+            Console.WriteLine($"cognitoUserPoolId={cognitoUserPoolId}");
+            Console.WriteLine($"cognitoClientId={cognitoClientId}");
+            string cognitoRegion = Environment.GetEnvironmentVariable("AWS_REGION") ?? "us-east-1";
+            string cognitoIssuer = $"https://cognito-idp.{cognitoRegion}.amazonaws.com/{cognitoUserPoolId}";
+
             services.AddAuthentication(options =>
             {
                 options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
                 options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
                 options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-
             })
             .AddJwtBearer(options =>
             {
-                options.UseSecurityTokenValidators = true;
-                options.Audience = clientId;
-                options.SecurityTokenValidators.Clear();
-                options.SecurityTokenValidators.Add(new GoogleTokenValidator());
+                options.MapInboundClaims = false;
+                options.Authority = cognitoIssuer;
+                options.TokenValidationParameters = new TokenValidationParameters
+                {
+                    ValidateIssuer = true,
+                    ValidIssuer = cognitoIssuer,
+                    ValidateAudience = true,
+                    ValidAudience = cognitoClientId,
+                    ValidateLifetime = true,
+                };
             });
 
             services.AddCors(options =>
@@ -92,7 +110,8 @@ namespace PredictionApi
 
             // TODO conver to env variable, enable localhost in dev mode
             var isAllowed = uri.Host.Equals("ikenley.com", StringComparison.OrdinalIgnoreCase)
-                            || uri.Host.EndsWith(".ikenley.com", StringComparison.OrdinalIgnoreCase);
+                            || uri.Host.EndsWith(".ikenley.com", StringComparison.OrdinalIgnoreCase)
+                            || uri.Host.Equals("localhost", StringComparison.OrdinalIgnoreCase);
 
             return isAllowed;
         }
