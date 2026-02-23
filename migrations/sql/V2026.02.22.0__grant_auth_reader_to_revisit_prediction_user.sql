@@ -1,0 +1,1 @@
+grant auth_reader to revisit_prediction_user;
