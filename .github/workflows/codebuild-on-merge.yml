@@ -1,0 +1,31 @@
+name: Trigger CodeBuild on PR Merge
+
+permissions:
+  id-token: write # Required for OIDC authentication
+  contents: read # Recommended for checking out code
+
+on:
+  pull_request:
+    types: [closed]
+    branches:
+      - main
+
+jobs:
+  trigger-codebuild:
+    if: github.event.pull_request.merged == true
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-region: us-east-1
+          role-to-assume: arn:aws:iam::924586450630:role/ik-dev-main-core-github
+          role-session-name: PredictionApp
+
+      - name: Start CodeBuild Project
+        run: |
+          aws codebuild start-build \
+            --project-name ik-dev-prediction-codebuild-main \
+            --source-version ${{ github.sha }} \
+            --environment-variables-override name=TERRAFORM_ACTION,value=apply,type=PLAINTEXT
