@@ -1,5 +1,5 @@
 import React from "react";
-import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { QueryClient, QueryClientProvider } from "react-query";
@@ -18,23 +18,13 @@ const App = () => {
         <Router>
           <div className="app">
             <ScrollToTop />
-            <Switch>
-              <Route path="/about">
-                <AboutPage />
-              </Route>
-              <Route path="/predictions">
-                <PredictionPage />
-              </Route>
-              <Route path="/p/:defaultPredictionId">
-                <PredictionPage />
-              </Route>
-              <Route path="/share/:sharedPredictionId">
-                <PredictionPage />
-              </Route>
-              <Route path="/">
-                <PredictionPage />
-              </Route>
-            </Switch>
+            <Routes>
+              <Route path="/about" element={<AboutPage />} />
+              <Route path="/predictions" element={<PredictionPage />} />
+              <Route path="/p/:defaultPredictionId" element={<PredictionPage />} />
+              <Route path="/share/:sharedPredictionId" element={<PredictionPage />} />
+              <Route path="*" element={<PredictionPage />} />
+            </Routes>
 
             <Footer />
             <ToastContainer />

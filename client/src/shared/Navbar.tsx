@@ -20,14 +20,19 @@ const NavbarMain = () => {
       >
         <Nav className="mr-auto nav-links">
           <NavLink
-            className="nav-link"
-            activeClassName="active"
+            className={({ isActive }) =>
+              isActive ? "nav-link active" : "nav-link"
+            }
             to="/"
-            exact={true}
           >
             Predictions
           </NavLink>
-          <NavLink className="nav-link" activeClassName="active" to="/about">
+          <NavLink
+            className={({ isActive }) =>
+              isActive ? "nav-link active" : "nav-link"
+            }
+            to="/about"
+          >
             About
           </NavLink>
         </Nav>
