@@ -27,6 +27,7 @@ phases:
       - npm run build
   post_build:
     commands:
+      - test "$CODEBUILD_BUILD_SUCCEEDING" = "1" || { echo "Build phase failed, aborting post_build"; exit 1; }
       - echo Build completed on `date`
       - echo "Deploying the API layer lambda function"
       - echo Pushing the Docker image...
